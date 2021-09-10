@@ -1,0 +1,14 @@
+{
+  "include": ["src/**/*", "src/commands/config/modroles.ts"],
+  "compilerOptions": {
+    "target": "ES2017",
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "esModuleInterop": true
+  }
+}
