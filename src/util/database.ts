@@ -4,7 +4,7 @@ let db, servers
 
 dotenv.config()
 
-const mongo = new MongoClient(process.env.MONGO_URL!);
+const mongo = new MongoClient(process.env.MONGO_URL!)
 
 export const connect = async () => {
     await mongo.connect()

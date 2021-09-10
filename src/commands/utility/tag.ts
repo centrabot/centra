@@ -25,9 +25,9 @@ export default class TagCommand extends VoltareCommand {
                     When sending a tag, use the \`--mention <user>\` option to make the tag mention a user to get their attention.
                 `
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {

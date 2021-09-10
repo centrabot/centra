@@ -14,9 +14,9 @@ export default class InvitesCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}invites']
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {

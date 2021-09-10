@@ -12,7 +12,7 @@ export default class HelpCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}help', '{p}help [command]']
             }
-        });
+        })
 
         this.filePath = __filename
     }

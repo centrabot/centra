@@ -26,9 +26,9 @@ export default class PunishmentsCommand extends VoltareCommand {
                 Use the punishment IDs found here to update the reasons or pardon warnings.
                 `
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {

@@ -11,7 +11,7 @@ export default class PingCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}ping']
             }
-        });
+        })
 
         this.filePath = __filename
     }
@@ -27,6 +27,6 @@ export default class PingCommand extends VoltareCommand {
             `
         })
 
-        return;
+        return
     }
 }

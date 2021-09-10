@@ -34,7 +34,7 @@ export default class PingCommand extends VoltareCommand {
                 Use \`{p}config set <key> <val>\` to set a config value, and \`\{p}config reset <key | all>\` to reset all or a specific config value. 
                 `
             }
-        });
+        })
 
         this.filePath = __filename
     }
@@ -103,7 +103,7 @@ export default class PingCommand extends VoltareCommand {
             const details = configDetails[key]
             const curVal = server![value.key]
 
-            let set;
+            let set
 
             if (details.type === 'string') {
                 if (newVal === curVal) return sendError(ctx, 'The new config value is the same as the current config value')

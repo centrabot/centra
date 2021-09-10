@@ -17,9 +17,9 @@ export default class WarnCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}warn <user> --reason <reason>']
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {

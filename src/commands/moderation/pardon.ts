@@ -16,9 +16,9 @@ export default class PardonCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}pardon <id> --reason <reason>']
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {

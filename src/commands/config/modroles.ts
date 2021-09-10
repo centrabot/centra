@@ -22,7 +22,7 @@ export default class ModrolesCommand extends VoltareCommand {
                 \`<role>\` can be the name of a role in the server (case sensitive) or a role ID.
                 `
             }
-        });
+        })
 
         this.filePath = __filename
     }

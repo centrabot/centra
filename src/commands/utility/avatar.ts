@@ -22,9 +22,9 @@ export default class HelpCommand extends VoltareCommand {
                     Provide the --size or -s flag to set the size to 128, 256, 512, 1024 or 2048.
                 `
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {

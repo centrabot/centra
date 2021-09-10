@@ -14,9 +14,9 @@ export default class ServerinfoCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}serverinfo']
             }
-        });
+        })
 
-        this.filePath = __filename;
+        this.filePath = __filename
     }
 
     async run(ctx: CommandContext) {
