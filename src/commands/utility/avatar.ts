@@ -7,7 +7,7 @@ import { sendError } from '../../util/messageUtils'
 
 let validSizes = [128, 256, 512, 1024, 2048]
 
-export default class HelpCommand extends VoltareCommand {
+export default class AvatarCommand extends VoltareCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'avatar',
