@@ -54,7 +54,7 @@ export default class ServerinfoCommand extends VoltareCommand {
         > - User leave: ${sysLeave ? `Enabled, <#${(sysLeave as Channel)._id}>` : 'Disabled'}
         > - User kick: ${sysKick ? `Enabled, <#${(sysKick as Channel)._id}>` : 'Disabled'}
         > - User ban: ${sysBan ? `Enabled, <#${(sysBan as Channel)._id}>` : 'Disabled'}
-        > **Icon:** [Server icon](${server.generateIconURL({ size: 256 })})
+        > **Icon:** ${server.icon ? `[Server icon](${server.generateIconURL({ size: 256 })})` : 'No icon'}
         > **Banner:** ${server.banner ? `[Server banner](https://autumn.revolt.chat/banners/${server.banner._id}?width=480)` : 'No banner'}
         `)
 
