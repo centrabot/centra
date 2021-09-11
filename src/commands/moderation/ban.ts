@@ -30,9 +30,9 @@ export default class BanCommand extends VoltareCommand {
 
         const user = await getUser(ctx.client.bot, params._[0])
         if (!user) return sendError(ctx, `Failed to fetch user`)
-        if (user._id === ctx.author._id) return sendError(ctx, 'You cannot kick yourself')
+        if (user._id === ctx.author._id) return sendError(ctx, 'You cannot ban yourself')
 
-        if (!reason) return sendError(ctx, 'A reason is required to kick a member')
+        if (!reason) return sendError(ctx, 'A reason is required to ban a member')
 
         const member = await ctx.server!.fetchMember(user._id)
         if (!member) return sendError(ctx, 'Failed to fetch member')
@@ -41,12 +41,12 @@ export default class BanCommand extends VoltareCommand {
         const punishments = server!.punishments
 
         try {
-            await member.kick()
+            await ctx.server!.banUser(user._id, { reason })
         } catch(err) {
             return sendError(ctx, stripIndents`
-            Failed to kick member. This could be for one of the following reasons:
-            - The member you tried to kick was the owner
-            - The bot does not have the required permission to kick members
+            Failed to ban member. This could be for one of the following reasons:
+            - The member you tried to ban was the owner
+            - The bot does not have the required permission to ban members
             `)
         }
 
@@ -57,7 +57,7 @@ export default class BanCommand extends VoltareCommand {
                 id,
                 userID: user._id,
                 moderatorID: ctx.author._id,
-                type: 'kick',
+                type: 'ban',
                 createdAt: new Date(),
                 reason
             })
@@ -68,7 +68,7 @@ export default class BanCommand extends VoltareCommand {
         }
 
         await ctx.reply(stripIndents`
-        Kicked ${user.username}:
+        Banned ${user.username}:
         > ${reason}
         `)
 
@@ -79,7 +79,7 @@ export default class BanCommand extends VoltareCommand {
             if (!modLogsChannel) return
 
             await modLogsChannel.sendMessage(stripIndents`
-            > \`${id}\` - $\\color{#F39F00}\\textsf{User kicked}$
+            > \`${id}\` - $\\color{#CE3C3C}\\textsf{User banned}$
             > **User:** ${user.username}
             > **Moderator:** ${ctx.author.username}
             > &nbsp;
