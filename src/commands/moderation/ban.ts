@@ -8,14 +8,14 @@ import { servers } from '../../util/database'
 import { getUser } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
 
-export default class WarnCommand extends VoltareCommand {
+export default class BanCommand extends VoltareCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
-            name: 'warn',
-            description: 'Issue a warning to a member',
+            name: 'ban',
+            description: 'Ban a member',
             category: 'Moderation',
             metadata: {
-                examples: ['{p}warn <user> --reason <reason>']
+                examples: ['{p}ban <user> --ban <reason>']
             }
         })
 
@@ -30,31 +30,45 @@ export default class WarnCommand extends VoltareCommand {
 
         const user = await getUser(ctx.client.bot, params._[0])
         if (!user) return sendError(ctx, `Failed to fetch user`)
-        if (user._id === ctx.author._id) return sendError(ctx, 'You cannot issue a warning to yourself')
-        if (user.bot) return sendError(ctx, 'You cannot issue a warning to a bot')
+        if (user._id === ctx.author._id) return sendError(ctx, 'You cannot kick yourself')
 
-        if (!reason) return sendError(ctx, `A reason is required to issue a warning`)
+        if (!reason) return sendError(ctx, 'A reason is required to kick a member')
+
+        const member = await ctx.server!.fetchMember(user._id)
+        if (!member) return sendError(ctx, 'Failed to fetch member')
 
         const server = await (servers as Collection).findOne({ id: ctx.server!._id })
         const punishments = server!.punishments
 
+        try {
+            await member.kick()
+        } catch(err) {
+            return sendError(ctx, stripIndents`
+            Failed to kick member. This could be for one of the following reasons:
+            - The member you tried to kick was the owner
+            - The bot does not have the required permission to kick members
+            `)
+        }
+
         const id = nanoid(10)
 
-        punishments.push({
-            id,
-            userID: user._id,
-            moderatorID: ctx.author._id,
-            type: 'warning',
-            createdAt: new Date(),
-            reason
-        })
-
-        await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
-            punishments
-        } })
+        if (!user.bot) {
+            punishments.push({
+                id,
+                userID: user._id,
+                moderatorID: ctx.author._id,
+                type: 'kick',
+                createdAt: new Date(),
+                reason
+            })
+    
+            await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
+                punishments
+            } })
+        }
 
         await ctx.reply(stripIndents`
-        Warning with ID \`${id}\` issued to ${user.username}:
+        Kicked ${user.username}:
         > ${reason}
         `)
 
@@ -65,7 +79,7 @@ export default class WarnCommand extends VoltareCommand {
             if (!modLogsChannel) return
 
             await modLogsChannel.sendMessage(stripIndents`
-            > \`${id}\` - $\\color{#F39F00}\\textsf{Warning issued}$
+            > \`${id}\` - $\\color{#F39F00}\\textsf{User kicked}$
             > **User:** ${user.username}
             > **Moderator:** ${ctx.author.username}
             > &nbsp;
