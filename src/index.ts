@@ -20,7 +20,7 @@ const client = new VoltareClient({
 })
 
 client.loadModules(EventsModule)
-//client.loadModules(LoggingModule)
+client.loadModules(LoggingModule)
 
 //client.logRevoltEvents()
 client.logToConsole('info')

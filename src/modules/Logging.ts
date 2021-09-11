@@ -6,6 +6,10 @@ import { stripIndents } from 'common-tags'
 
 import { servers } from '../util/database'
 
+const messageCache = new Map
+const channelCache = new Map
+const roleCache = new Map
+
 export default class LoggingModule<t extends VoltareClient> extends VoltareModule<t> {
     constructor(client: t) {
         super(client, {
@@ -17,10 +21,23 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
     }
 
     load() {
-        this.registerEvent('messageUpdate', this.onMessageUpdate.bind(this))
-        this.registerEvent('messageUpdate', this.onMessageDelete.bind(this))
+        this.registerEvent('message', this.onMessage.bind(this))
 
+        this.registerEvent('messageUpdate', this.onMessageUpdate.bind(this))
+        this.registerEvent('messageDelete', this.onMessageDelete.bind(this))
+
+        //channelCreate
+        //channelUpdate
         this.registerEvent('channelDelete', this.onChannelDelete.bind(this))
+
+        //serverUpdate
+
+        //serverRoleUpdate
+        //serverRoleDelete
+
+        //serverMemberJoin
+        //serverMemberUpdate
+        //serverMemberLeave
     }
 
     unload() {
@@ -38,10 +55,21 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         if (!channel) return
 
         return channel
-    } 
+    }
+
+    private async onReady(event: ClientEvent) {
+        this.client.bot.servers.forEach(server => server.channels.forEach(channel => channelCache.set(channel?._id, server._id)))
+    }
+
+    private async onMessage(event: ClientEvent, message: Message) {
+        messageCache.set(message._id, message.channel!.server_id) 
+    }
 
     private async onMessageUpdate(event: ClientEvent, message: Message) {
-        //const channel = await this.getLogChannel()
+        const channel = await this.getLogChannel(message.channel!.server_id!)
+        if (!channel) return
+
+        console.log(message.content)
     }
 
     private async onMessageDelete(event: ClientEvent, messageID: string) {

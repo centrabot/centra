@@ -37,9 +37,6 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
         await this.client.bot.users.edit({
             status: {
                 text: `${process.env.PREFIX}help or @${process.env.BOT_NAME} help`
-            },
-            profile: {
-                content: `Centra is a powerful moderation & utility bot for Revolt servers.\n[Invite ${process.env.BOT_NAME} to your server](${process.env.INVITE_URL}) | [Join the support server](${process.env.SUPPORT_URL})`
             }
         })
     }

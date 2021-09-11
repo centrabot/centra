@@ -20,13 +20,18 @@ export default class StatisticsCommand extends VoltareCommand {
     }
 
     async run(ctx: CommandContext) {
-        await ctx.reply(stripIndents`
+        const used = process.memoryUsage();
 
+        await ctx.reply(stripIndents`
+        
         ### ${process.env.BOT_NAME}
         Created by [@ThatTonybo](/@${process.env.ELEVATED})
         &nbsp;
         **Servers:** ${ctx.client.bot.servers.size}
         **Cached Users:** ${ctx.client.bot.users.size}
+        &nbsp;
+        **Memory Usage:**
+        ${Object.entries(used).map(i => `- ${i[0]}: ${Math.round(i[1] / 1024 / 1024 * 100) / 100} MB`).join('\n')}
         &nbsp;
         **Made with:**
         - [revolt.js](https://github.com/revoltchat/revolt.js) (${LIBRARY_VERSION})
