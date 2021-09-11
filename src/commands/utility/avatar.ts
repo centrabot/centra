@@ -2,7 +2,7 @@ import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
 import { stripIndents } from 'common-tags'
 import parse from 'yargs-parser'
 
-import { getUser } from '../../util/userUtils'
+import { getUser } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
 
 let validSizes = [128, 256, 512, 1024, 2048]

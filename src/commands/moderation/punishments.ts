@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import parse from 'yargs-parser'
 
 import { servers } from '../../util/database'
-import { getUser } from '../../util/userUtils'
+import { getUser } from '../../util/fetchUtils'
 import { sendError, paginate } from '../../util/messageUtils'
 
 const validSorting = ['newest', 'oldest']

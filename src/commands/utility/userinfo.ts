@@ -4,7 +4,7 @@ import { stripIndents } from 'common-tags'
 import { format } from 'date-fns'
 import { decodeTime } from 'ulid'
 
-import { getUser } from '../../util/userUtils'
+import { getUser } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
 
 export default class UserinfoCommand extends VoltareCommand {
@@ -33,8 +33,17 @@ export default class UserinfoCommand extends VoltareCommand {
         const profile = await user.fetchProfile()
         const mutuals = await user.fetchMutual()
 
+        const obj = await ctx.client.bot.servers.fetch(ctx.server!._id)
+        const serverRoles = Object.entries(obj.roles as any).map(i => {
+            const data: any = i[1]
+            data._id = i[0]
+            return data
+        })
+        
+        const userRoles = serverRoles.filter(role => member.roles!.includes(role._id))
         const mutualServers = await Promise.all(mutuals.servers.map(async id => {
             const server = await ctx.client.bot.servers.fetch(id)
+
             return server
         }))
 
@@ -54,6 +63,7 @@ export default class UserinfoCommand extends VoltareCommand {
         > - Nickname: ${member.nickname || 'No nickname'}
         > - Server Avatar: ${member.avatar || 'No server avatar'}
         > **Bot:** ${user.bot ? `\n> - Owner: ${botOwner.username}` : 'No'}
+        > **Roles:** ${userRoles.map(role => `$\\color{${role.colour}}\\textsf{${role.name}}$`).join(', ') || 'No roles'}
         > **Badges:** ${user.badges}
         > **Flags:** ${user.flags || 'No flags'}
         > **Mutual Servers with bot:** ${mutualServers.map(server => `[${server.name}](/server/${server._id})`).join(', ')}

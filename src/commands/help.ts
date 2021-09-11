@@ -21,7 +21,7 @@ export default class HelpCommand extends VoltareCommand {
         if (!ctx.args.length) {
             const categories: any[] = []
 
-            ctx.client.commands.commands.map(command => {
+            ctx.client.commands.commands.filter(command => command.category !== 'developer').map(command => {
                 if (!categories.find(category => category.name === command.category)) categories.push({
                     name: command.category,
                     commands: []

@@ -24,6 +24,7 @@ client.loadModules(EventsModule)
 client.logToConsole('info')
 
 client.commands.registerFromFolder(path.join('./dist/commands'))
+client.commands.registerDefaults(['eval'])
 
 client.connect()
 database.connect()

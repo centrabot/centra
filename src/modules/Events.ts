@@ -62,6 +62,8 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
             prefix: '?',
             useMentionPrefix: true,
             membersCanUseTags: false,
+            serverLogsChannel: null,
+            modLogsChannel: null
         })
     }
 

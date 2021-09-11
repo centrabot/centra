@@ -3,6 +3,7 @@ import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 
 import { servers } from '../../util/database'
+import { getChannel } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
 
 const validOptions = ['view', 'set', 'reset']
@@ -11,16 +12,20 @@ const validResetOptions = ['<key>', 'all']
 const defaultConfig = {
     prefix: '?',
     useMentionPrefix: true,
-    membersCanUseTags: false
+    membersCanUseTags: false,
+    serverLogsChannel: null,
+    modLogsChannel: null
 }
 
 const configDetails = {
     prefix: { key: 'prefix', type: 'string', description: 'The prefix to use in the server' },
     useMentionPrefix: { key: 'useMentionPrefix', type: 'boolean', description: 'Whether to allow mentioning the bot to be used as a prefix' },
-    membersCanUseTags: { key: 'membersCanUseTags', type: 'string', description: 'Whether to allow members (non-moderators) to use and send tags' }
+    membersCanUseTags: { key: 'membersCanUseTags', type: 'string', description: 'Whether to allow members (non-moderators) to use and send tags' },
+    serverLogsChannel: { key: 'serverLogsChannel', type: 'channel', description: 'The channel where server logs (such as joins, leaves, edits) are sent/logged to' },
+    modLogsChannel: { key: 'modLogsChannel', type: 'channel', description: 'The channel where mod logs (such as kicks, bans, mutes, warnings) are sent/logged to' }
 }
 
-export default class PingCommand extends VoltareCommand {
+export default class ConfigCommand extends VoltareCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'config',
@@ -39,7 +44,7 @@ export default class PingCommand extends VoltareCommand {
         this.filePath = __filename
     }
 
-    async run(ctx: CommandContext) {
+    async run(ctx: CommandContext) {            try {
         if (!ctx.args.length) return stripIndents`
         No option provided. Option must be one of the following: ${validOptions.join(', ')}
         See \`${ctx.prefix}help config\` for more information
@@ -75,13 +80,20 @@ export default class PingCommand extends VoltareCommand {
 
             const val = server![value.key]
 
+            console.log(value.key, configDetails[value.key])
+
+            let display, defaultDisplay
+            if (value.type === 'string') display = `\`${val}\``, defaultDisplay = `\`${defaultConfig[value.key]}\``
+            if (value.type === 'boolean') display = val ? '✔️' : '❌', defaultDisplay = defaultConfig[value.key] ? '✔️' : '❌'
+            if (value.type === 'channel') display = val ? `<#${val}>` : '`none`', defaultDisplay = defaultConfig[value.key] ? `<#${defaultConfig[value.key]}>` : '`none`'
+
             ctx.reply(stripIndents`
             ### ${value.key}
             ${value.description}
             &nbsp;
             **Type:** ${value.type}
-            **Default Value:** \`${defaultConfig[value.key]}\`
-            **Current Value:** \`${val}\`
+            **Default Value:** ${defaultDisplay}
+            **Current Value:** ${display}
             &nbsp;
             To set: \`${ctx.prefix}config set ${value.key} <val>\`
             To reset: \`${ctx.prefix}config reset ${value.key}\`
@@ -100,8 +112,9 @@ export default class PingCommand extends VoltareCommand {
             const newVal = ctx.args.join(' ')
             if (!newVal) return sendError(ctx, 'No new value provided')
 
-            const details = configDetails[key]
             const curVal = server![value.key]
+            const details = Object.values(configDetails).find(i => i.key === value.key)
+            if (!details) return sendError(ctx, 'Failed to fetch config details')
 
             let set
 
@@ -116,13 +129,25 @@ export default class PingCommand extends VoltareCommand {
                 if (set === curVal) return sendError(ctx, 'The new config value is the same as the current config value')
             }
 
+            if (details.type === 'channel') {
+                if (newVal.toLowerCase() === 'none') set = null
+                const channel = await getChannel(ctx.server!, newVal)
+                if (!channel) return sendError(ctx, 'The specified channel does not exist in this server')
+                set = channel._id
+            }
+
             let obj = {}
             obj[key] = set
 
             await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: obj })
 
+            let display
+            if (details.type === 'string') display = `\`${set}\``
+            if (details.type === 'boolean') display = set ? '✔️' : '❌'
+            if (details.type === 'channel') display = set ? `<#${set}>` : '`none`'
+
             await ctx.reply(stripIndents`
-            Set \`${key}\` to \`${set}\`
+            Set \`${key}\` to ${display}
             `)
 
             return
@@ -160,11 +185,13 @@ export default class PingCommand extends VoltareCommand {
 
             await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: obj })
 
-                await ctx.reply(stripIndents`
-                Reset \`${key}\` to its default
-                `)
+            await ctx.reply(stripIndents`
+            Reset \`${key}\` to its default
+            `)
 
             return
         }
+
+    } catch(err) { console.error(err) }
     }
 }

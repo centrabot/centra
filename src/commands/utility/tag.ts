@@ -6,7 +6,7 @@ import parse from 'yargs-parser'
 
 import { servers } from '../../util/database'
 import { sendError } from '../../util/messageUtils'
-import { getUser } from '../../util/userUtils'
+import { getUser } from '../../util/fetchUtils'
 
 const validOptions = ['<name>', 'list', 'info', 'create', 'edit', 'delete']
 
