@@ -174,7 +174,11 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         ${differences.map(difference => `> - ${difference.key}: \`${difference.old || 'none'}\` -> \`${difference.new || 'none'}\``).join('\n')}
         `)
 
-        differences.forEach(difference => channelCache.get(channel.id)[difference.key] = difference.new)
+        differences.forEach(difference => {
+            const newObj = oldChannel
+            newObj[difference.key] = difference.new
+            channelCache.set(channel.id, newObj)
+        })
     }
 
     private async onChannelDelete(event: ClientEvent, channelID: string) {
