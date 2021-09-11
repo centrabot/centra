@@ -23,7 +23,7 @@ export default class StatisticsCommand extends VoltareCommand {
         const used = process.memoryUsage();
 
         await ctx.reply(stripIndents`
-        
+        [](a://a)
         ### ${process.env.BOT_NAME}
         Created by [@ThatTonybo](/@${process.env.ELEVATED})
         &nbsp;
