@@ -1,6 +1,7 @@
 import { VoltareModule, VoltareClient, ClientEvent } from 'voltare'
 import { Message } from 'revolt.js/dist/maps/Messages'
 import { Collection } from 'mongodb'
+import { stripIndents } from 'common-tags'
 
 import { servers } from '../util/database'
 
@@ -65,9 +66,51 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
             serverLogsChannel: null,
             modLogsChannel: null
         })
+
+        const channel = await this.client.bot.channels.fetch(process.env.LOG_CHANNEL_ID!)
+        if (!channel) return
+
+        const server = await this.client.bot.servers.fetch(event.id)
+        if (!server) return
+
+        const owner = await this.client.bot.users.fetch(server.owner)
+        const members = await server.fetchMembers()
+        const userCount = members.users.filter(user => !user.bot)
+        const botCount = members.users.filter(user => user.bot)
+
+        await channel.sendMessage(stripIndents`
+        > ### 🟢 Added to server: ${server.name}
+        > #### Server count: ${this.client.bot.servers.size}
+        > &nbsp;
+        > **Owner:** ${owner.username || '*Unable to fetch owner*'}
+        > **Members:**
+        > - Users: ${userCount.length}
+        > - Bots: ${botCount.length === 0 ? 'None' : botCount.length}
+        > &nbsp;
+        > ##### Server ID: ${server._id}
+        `)
     }
 
     private async onDelete(event: any) {
         await (servers as Collection).deleteOne({ id: event.id })
+
+        const channel = await this.client.bot.channels.fetch(process.env.LOG_CHANNEL_ID!)
+        if (!channel) return
+
+        const messages = await channel.search({
+            query: `Server ID: ${event.id}`
+        })
+        if (!messages.length) return
+        
+        const message = messages[0]
+        if (!message) return
+        const name = (message.content as any).match(/🟢 Added to server: (.+)/)[1]
+
+        await channel.sendMessage(stripIndents`
+        > ### 🔴 Removed from server: ${name}
+        > #### Server count: ${this.client.bot.servers.size}
+        > &nbsp;
+        > ##### Server ID: ${event.id}
+        `)
     }
 }

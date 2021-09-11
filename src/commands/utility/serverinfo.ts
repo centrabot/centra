@@ -41,7 +41,7 @@ export default class ServerinfoCommand extends VoltareCommand {
         await ctx.reply(stripIndents`
         > ### ${server.name}
         > **Description:** ${server.description || 'No description'}
-        > **Owner:** ${owner.username || '*Unable to fetch owner'}
+        > **Owner:** ${owner.username || '*Unable to fetch owner*'}
         > **Created at:** ${format(creationDate, 'yyyy-MM-dd h:mm aa')}
         > **Members:**
         > - Users: ${userCount.length}
