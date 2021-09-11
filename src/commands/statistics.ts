@@ -26,6 +26,7 @@ export default class StatisticsCommand extends VoltareCommand {
         [](a://a)
         ### ${process.env.BOT_NAME}
         Created by [@ThatTonybo](/@${process.env.ELEVATED})
+        [Source code on GitHub](https://github.com/centrabot/centra)
         &nbsp;
         **Servers:** ${ctx.client.bot.servers.size}
         **Cached Users:** ${ctx.client.bot.users.size}
