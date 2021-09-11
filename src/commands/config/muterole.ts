@@ -19,7 +19,7 @@ export default class MuteroleCommand extends VoltareCommand {
                 The muterole command lets you create or set a role that will be used to mute users.
                 Either creating a role (\`{p}muterole create <name>\`) or setting an existing role (\`{p}muterole set <role>\`) will overwrite it's permissions for every channel in the server to deny sending permissions.
                 Once a role has been created or set, the bot will ensure any new channels are updated with the permission overwrites to ensure muting works there.
-                If for some reason the mute role fails in a channel, run \`{p}muterole update\` to ensure all channels are properly updated.`
+                If for some reason the mute role fails in a channel, run \`{p}muterole update\` to ensure all channels are properly updated.
                 `
             }
         })
