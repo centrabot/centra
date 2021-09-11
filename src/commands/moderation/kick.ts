@@ -44,7 +44,7 @@ export default class KickCommand extends VoltareCommand {
             await member.kick()
         } catch(err) {
             return sendError(ctx, stripIndents`
-            Failed to kick member. This could be for one of the following reasons:
+            Failed to kick member. This could be due to one of the following reasons:
             - The member you tried to kick was the owner
             - The bot does not have the required permission to kick members
             `)

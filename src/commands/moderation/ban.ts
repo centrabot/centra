@@ -44,7 +44,7 @@ export default class BanCommand extends VoltareCommand {
             await ctx.server!.banUser(user._id, { reason })
         } catch(err) {
             return sendError(ctx, stripIndents`
-            Failed to ban member. This could be for one of the following reasons:
+            Failed to ban member. This could be due to one of the following reasons:
             - The member you tried to ban was the owner
             - The bot does not have the required permission to ban members
             `)
