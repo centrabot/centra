@@ -99,6 +99,8 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         const oldMessage = messageCache.get(message._id)
         if (!oldMessage) return
 
+        if (oldMessage.content === message.content) return
+
         await logChannel.sendMessage(stripIndents`
         > #### Message updated
         > **Author:** ${message.author!.username || '*Unknown*'}
