@@ -59,8 +59,27 @@ export default class PardonCommand extends VoltareCommand {
         } })
 
         await ctx.reply(stripIndents`
-        Warning with ID \`${warning.id}\` for ${user} pardoned:
+        Warning with ID \`${warning.id}\` for ${user.username} pardoned:
         > ${reason}
         `)
+
+        const modLogs = (server!.modLogsChannel || server!.modlogschannel || null)
+        if (!modLogs) return
+        else {
+            const modLogsChannel = await ctx.client.bot.channels.fetch(modLogs)
+            if (!modLogsChannel) return
+
+            await modLogsChannel.sendMessage(stripIndents`
+            > \`${id}\` - $\\color{#1D6CBF}\\textsf{Warning pardoned}$
+            > **User:** ${user.username}
+            > **Moderator:** ${ctx.author.username}
+            > **Original warning:** ${warning.reason}
+            > &nbsp;
+            > **Reason:**
+            > ${reason}
+            `)
+
+            return
+        }
     }
 }

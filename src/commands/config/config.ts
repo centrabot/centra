@@ -80,8 +80,6 @@ export default class ConfigCommand extends VoltareCommand {
 
             const val = server![value.key]
 
-            console.log(value.key, configDetails[value.key])
-
             let display, defaultDisplay
             if (value.type === 'string') display = `\`${val}\``, defaultDisplay = `\`${defaultConfig[value.key]}\``
             if (value.type === 'boolean') display = val ? '✔️' : '❌', defaultDisplay = defaultConfig[value.key] ? '✔️' : '❌'

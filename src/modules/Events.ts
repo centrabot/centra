@@ -79,7 +79,7 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
         const botCount = members.users.filter(user => user.bot)
 
         await channel.sendMessage(stripIndents`
-        > ### 🟢 Added to server: ${server.name}
+        > ### $\\color{#23E586}\\textsf{Added to server:}$ ${server.name}
         > #### Server count: ${this.client.bot.servers.size}
         > &nbsp;
         > **Owner:** ${owner.username || '*Unable to fetch owner*'}
@@ -104,10 +104,10 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
         
         const message = messages[0]
         if (!message) return
-        const name = (message.content as any).match(/🟢 Added to server: (.+)/)[1]
+        const name = (message.content as any).match(/\$\\color{#23E586}\\textsf{Added to server:}\$ (.+)/)[1]
 
         await channel.sendMessage(stripIndents`
-        > ### 🔴 Removed from server: ${name}
+        > ### $\\color{#CE3C3C}\\textsf{Removed from server:}$ ${name}
         > #### Server count: ${this.client.bot.servers.size}
         > &nbsp;
         > ##### Server ID: ${event.id}

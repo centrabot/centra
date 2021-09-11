@@ -59,6 +59,22 @@ export default class WarnCommand extends VoltareCommand {
 
         `)
 
-        return
+        const modLogs = (server!.modLogsChannel || server!.modlogschannel || null)
+        if (!modLogs) return
+        else {
+            const modLogsChannel = await ctx.client.bot.channels.fetch(modLogs)
+            if (!modLogsChannel) return
+
+            await modLogsChannel.sendMessage(stripIndents`
+            > \`${id}\` - $\\color{#F39F00}\\textsf{Warning issued}$
+            > **User:** ${user.username}
+            > **Moderator:** ${ctx.author.username}
+            > &nbsp;
+            > **Reason:**
+            > ${reason}
+            `)
+
+            return
+        }
     }
 }

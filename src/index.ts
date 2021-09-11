@@ -23,7 +23,7 @@ client.loadModules(EventsModule)
 //client.logRevoltEvents()
 client.logToConsole('info')
 
-client.commands.registerFromFolder(path.join('./dist/commands'))
+client.commands.registerFromFolder(path.join('./dist/src/commands'))
 client.commands.registerDefaults(['eval'])
 
 client.connect()
