@@ -1,4 +1,5 @@
 import { VoltareModule, VoltareClient, ClientEvent } from 'voltare'
+import { ClientboundNotification } from 'revolt.js/dist/websocket/notifications'
 import { Message } from 'revolt.js/dist/maps/Messages'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
@@ -20,7 +21,7 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
 
         this.registerEvent('message', this.onMessage.bind(this), { after: ['commands'] })
 
-        this.registerEvent('packet', (packet: any, data: any) => {
+        this.registerEvent('packet', (event: ClientEvent, data: ClientboundNotification) => {
             if (data.type === 'ServerMemberJoin' && data.user === this.client.bot.user?._id) this.onCreate(data)
             if (data.type === 'ServerMemberLeave' && data.user === this.client.bot.user?._id) this.onDelete(data)
         })

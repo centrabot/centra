@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 
 import EventsModule from './modules/Events'
+import LoggingModule from './modules/Logging'
 
 import * as database from './util/database'
 
@@ -19,6 +20,7 @@ const client = new VoltareClient({
 })
 
 client.loadModules(EventsModule)
+//client.loadModules(LoggingModule)
 
 //client.logRevoltEvents()
 client.logToConsole('info')
