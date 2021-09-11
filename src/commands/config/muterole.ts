@@ -5,6 +5,8 @@ import { stripIndents } from 'common-tags'
 import { servers } from '../../util/database'
 import { sendError } from '../../util/messageUtils'
 
+const validOptions = ['list', 'add', 'remove']
+
 export default class MuteroleCommand extends VoltareCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
@@ -14,10 +16,10 @@ export default class MuteroleCommand extends VoltareCommand {
             metadata: {
                 examples: ['{p}muterole create <name>', '{p}muterole set <role>', '{p}muterole view'],
                 extendedDescription: stripIndents`
-                The modroles command lets you add, view and remove the roles in the server that are considered moderator roles.
-                Any user that has one of the roles listed is considered a moderator, and can use the moderator-only commands.
-                Use \`{p}modroles add <role>\` to add a role, \`{p}modroles list\` to view all roles, and \`{p}modroles remove <role | all>\` to remove a specific role or all roles.
-                \`<role>\` can be the name of a role in the server (case sensitive) or a role ID.
+                The muterole command lets you create or set a role that will be used to mute users.
+                Either creating a role (\`{p}muterole create <name>\`) or setting an existing role (\`{p}muterole set <role>\`) will overwrite it's permissions for every channel in the server to deny sending permissions.
+                Once a role has been created or set, the bot will ensure any new channels are updated with the permission overwrites to ensure muting works there.
+                If for some reason the mute role fails in a channel, run \`{p}muterole update\` to ensure all channels are properly updated.`
                 `
             }
         })
