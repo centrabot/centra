@@ -170,6 +170,10 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
             return { key: i[0], old: oldChannel[i[1] as string], new: i[1] }
         })
 
+        // stops spamming from mass permission updates
+        if (differences.some(difference => difference.key === 'default_permissions')) return
+        if (differences.some(difference => difference.key === 'role_permissions')) return
+
         await logChannel.sendMessage(stripIndents`
         > #### Channel updated
         > **Updated values:**
