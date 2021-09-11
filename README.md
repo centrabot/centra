@@ -11,6 +11,7 @@ Centra is in development and an invite link is not yet public
 - Configurable logging of all server events***
 - Tags system with mention option and moderator-only functionality
 - Auto-response system based on specified keyword matches*
+- Private per-server user notes shared with all moderators to help keep notes on particular users*
 - Configurable auto moderation (word filtering, message/emoji spam filtering, copypasta/assorted spam filtering, invite filtering) with optional automatic warning issuing*
 - Fully configurable trigger/threshold system to issue punishments based on certain thresholds, ie. `mute at 3 warnings`, `ban at 3 mutes`*
 - Highly customizable server configuration to allow granular control of all features****
