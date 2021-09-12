@@ -10,6 +10,7 @@ export default class HelpCommand extends GeneralCommand {
             name: 'help',
             description: 'View a list of commands, or view detailed command information',
             category: 'General',
+            aliases: ['h', 'commands'],
             metadata: {
                 examples: ['{p}help', '{p}help [command]']
             }
