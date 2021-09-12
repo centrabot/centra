@@ -20,7 +20,7 @@ Centra is in development and an invite link is not yet public
 #### Disclaimers:
 \* = indicates feature coming soon  
 \*\* = banning is functional, temp banning coming soon  
-\*\*\* = not all server events are logged yet, and are not configurable yet  
+\*\*\* = not all server events are logged yet
 \*\*\*\* = not all configuration features are present or complete  
 
 ## Development
