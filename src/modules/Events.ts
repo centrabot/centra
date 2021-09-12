@@ -60,6 +60,8 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
             adminRoles: [],
             muteRole: null,
             prefix: '?',
+            loggingEnabled: false,
+            loggingEventsEnabled: [],
             useMentionPrefix: true,
             membersCanUseTags: false,
             serverLogsChannel: null,
