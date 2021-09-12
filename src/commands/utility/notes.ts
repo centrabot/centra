@@ -17,10 +17,12 @@ export default class NotesCommand extends GeneralCommand {
             category: 'Utility',
             aliases: [],
             metadata: {
-                examples: ['{p}notes', '{p}notes [user]', '{p}notes [user] --page 2', '{p}notes [user] --add <note>', '{p}notes [user] --remove <note>'],
+                examples: ['{p}notes', '{p}notes [user]', '{p}notes [user] --page 2', '{p}notes [user] --add <note>', '{p}notes [user] --remove <number>'],
                 extendedDescription: stripIndents`
                     Moderator notes is a shared collection of notes created on a user, that can only be read by moderators.
                     Notes act as a list of sorts. Each user has their own notes, and moderators can add or remove small notes to the user.
+                    Use \`{p}notes [user] --add <note>\` to add a note, and \`{p}notes [user] --remove <number | all>\` to remove a specific note or all notes.
+                    You can view or manage your own notes by not providing a user.
                 `
             }
         })
@@ -63,6 +65,10 @@ export default class NotesCommand extends GeneralCommand {
                 createdBy: ctx.author._id
             })
 
+            const index = server!.notes.findIndex(i => i.user === user._id)
+            if (index === -1) return sendError(ctx, 'Failed to find note index')
+            server!.notes[index] = note
+
             await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
                 notes: server!.notes
             } })
@@ -75,7 +81,40 @@ export default class NotesCommand extends GeneralCommand {
         }
 
         if (remove) {
+            if (remove === 'all') {
+                note.notes = []
 
+                const index = server!.notes.findIndex(i => i.user === user._id)
+                if (index === -1) return sendError(ctx, 'Failed to find note index')
+                server!.notes[index] = note
+
+                await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
+                    notes: server!.notes
+                } })
+    
+                await ctx.reply(stripIndents`
+                All notes removed from ${user.username}
+                `)
+    
+                return
+            }
+
+            if (isNaN(remove)) return sendError(ctx, `Invalid note number provided. Provide a note\'s # number from \`${ctx.prefix}notes [user]\` to remove it.`)
+            if (!note.notes[Number(remove - 1)]) return sendError(ctx, `Invalid note number provided. Provide a note\'s # number from \`${ctx.prefix}notes [user]\` to remove it.`)
+
+            note.notes.splice(Number(remove - 1), 1)
+            
+            const index = server!.notes.findIndex(i => i.user === user._id)
+            if (index === -1) return sendError(ctx, 'Failed to find note index')
+            server!.notes[index] = note
+
+            await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
+                notes: server!.notes
+            } })
+
+            await ctx.reply(stripIndents`
+            Note #${remove} removed from ${user.username}
+            `)
 
             return
         }
@@ -84,9 +123,13 @@ export default class NotesCommand extends GeneralCommand {
 
         const pages = paginate(note.notes, 10)
 
-        if (page < pages.length) return sendError(ctx, `Invalid page number. Valid range is: 1 - ${pages.length}`)
+        if (page < 1 || page > pages.length) return sendError(ctx, `Invalid page number. Valid range is: 1 - ${pages.length}`)
 
         let i = 0;
+        if (page > 1) {
+            let num = 10 * Number(page - 1)
+            i += num
+        }
 
         const content = await Promise.all(pages[page - 1].map(async n => {
             const user = await ctx.client.bot.users.fetch(n.createdBy)
