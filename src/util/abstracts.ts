@@ -4,6 +4,9 @@ import { nanoid } from 'nanoid'
 
 export abstract class GeneralCommand extends VoltareCommand {
     async onError(err: any, ctx: CommandContext) {
+        if (err.toString() === 'No moderator roles configured') return ctx.reply('No moderator roles have been configured for this server')
+        if (err.toString() === 'No admin roles configured') return ctx.reply('No admin roles have been configured for this server')
+
         const id = nanoid(13)
         
         if (process.env.NODE_ENV === 'dev') console.error(err)
