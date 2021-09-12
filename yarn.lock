@@ -359,7 +359,7 @@ ulid@^2.3.0:
   resolved "https://registry.yarnpkg.com/ulid/-/ulid-2.3.0.tgz#93063522771a9774121a84d126ecd3eb9804071f"
   integrity sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw==
 
-voltare@^0.3.2:
+voltare@0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/voltare/-/voltare-0.3.2.tgz#730347beaf8d20eca71ee0945ae9a32a48bb7a33"
   integrity sha512-WzeoT7k5iC/chBenmepRBBM/9P2aszb6f/xlblPrcW3f2R5Ay/DPH4wQy3tTz8Zegdp+pA2ydw1uDv9yJeQh1w==

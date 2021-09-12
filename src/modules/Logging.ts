@@ -9,6 +9,7 @@ import { servers } from '../util/database'
 
 const messageCache = new Map
 const channelCache = new Map
+const memberCache = new Map
 const roleCache = new Map
 
 export const channelTypes = {
@@ -21,7 +22,10 @@ export const serverEvents = [
     'messageDelete',
     'channelCreate',
     'channelUpdate',
-    'channelDelete'
+    'channelDelete',
+    'serverMemberJoin',
+    'serverMemberUpdate',
+    'serverMemberLeave'
 ]
 
 export default class LoggingModule<t extends VoltareClient> extends VoltareModule<t> {
@@ -44,6 +48,10 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
 
             if (data.type === 'ChannelCreate') this.onChannelCreate(event, data as any)
             if (data.type === 'ChannelUpdate') this.onChannelUpdate(event, data as any)
+
+            if (data.type === 'ServerMemberJoin') this.onServerMemberJoin(event, data as any)
+            if (data.type === 'ServerMemberUpdate') this.onServerMemberUpdate(event, data as any)
+            if (data.type === 'ServerMemberLeave') this.onServerMemberLeave(event, data as any)
         })
 
         this.registerEvent('messageUpdate', this.onMessageUpdate.bind(this))
@@ -58,9 +66,9 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         //serverRoleUpdate - incomplete
         //serverRoleDelete - incomplete
 
-        //serverMemberJoin - incomplete
+        //this.registerEvent('serverMemberJoin', this.onServerMemberJoin.bind(this)) - direct binding broken
         //serverMemberUpdate - incomplete
-        //serverMemberLeave - incomplete
+        //this.registerEvent('serverMemberLeave', this.onServerMemberLeave.bind(this)) - direct binding broken
     }
 
     unload() {
@@ -91,13 +99,26 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
     }
 
     private async onReady(event: ClientEvent) {
-        this.client.bot.servers.forEach(server => server.channels.forEach(channel => {
-            channelCache.set(channel!._id, {
-                server: channel!.server_id,
-                name: channel!.name,
-                type: channel!.channel_type,
-                description: channel!.description,
-                icon: channel!.icon
+        await Promise.all(Object.values(this.client.bot.servers).map(async server => {
+            /*
+            TODO:
+            const members = await server.fetchMembers()
+
+            members.forEach(member => {
+                memberCache.set(member._id, {
+
+                })
+            })
+            */
+
+            server.channels.forEach(channel => {
+                channelCache.set(channel!._id, {
+                    server: channel!.server_id,
+                    name: channel!.name,
+                    type: channel!.channel_type,
+                    description: channel!.description,
+                    icon: channel!.icon
+                })
             })
         }))
     }
@@ -199,7 +220,8 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         if (!logChannel) return
         
         const differences = Object.entries(channel.data).map(i => {
-            return { key: i[0], old: oldChannel[i[1] as string], new: i[1] }
+            if (i[0] === 'icon') return { key: i[0], old: `[Link](https://autumn.revolt.chat/icons/${oldChannel.icon._id})`, new: `[Link](https://autumn.revolt.chat/icons/${(i[1] as any).icon._id})` }
+            return { key: i[0], old: oldChannel[i[0] as string], new: i[1] }
         })
 
         if (differences.some(difference => difference.key === 'default_permissions')) return
@@ -234,6 +256,70 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         > **Type:** ${channelTypes[channel.channel_type] || '*Unknown*'}
         > **Description:** ${channel.description || 'No description'}
         > **Icon:** ${channel.icon ? `[Link](https://autumn.revolt.chat/icons/${channel.icon._id})` : 'No icon'}
+        `)
+    }
+
+    private async onServerMemberJoin(event: ClientEvent, data: any) {
+        const enabled = await this.checkIfEnabled(data.id, 'serverMemberLeave')
+        if (!enabled) return
+
+        const logChannel = await this.getLogChannel(data.id)        
+        if (!logChannel) return
+
+        const user = await this.client.bot.users.fetch(data.user)
+        if (!user) return
+
+        await logChannel.sendMessage(stripIndents`
+        > #### User joined
+        > **User:** ${user.username}
+        `)
+    }
+
+    private async onServerMemberUpdate(event: ClientEvent, data: any) {
+        const enabled = await this.checkIfEnabled(data.id.server, 'serverMemberLeave')
+        if (!enabled) return
+
+        const logChannel = await this.getLogChannel(data.id.server)        
+        if (!logChannel) return
+
+        const user = await this.client.bot.users.fetch(data.id.user)
+        if (!user) return
+
+        if (data['clear']) {
+            await logChannel.sendMessage(stripIndents`
+            > #### User updated
+            > **User:** ${user.username}
+            > **Updated values:** 
+            > - ${data.clear} removed
+            `)
+        }
+
+        const differences = Object.entries(data.data).map(i => {
+            if (i[0] === 'avatar') return { key: i[0], old: null, new: `[Link](https://autumn.revolt.chat/avatars/${(i[1] as any).avatar._id}/${(i[1] as any).avatar.filename})` }
+            return { key: i[0], old: null, new: i[1] }
+        })
+
+        await logChannel.sendMessage(stripIndents`
+            > #### User updated
+            > **User:** ${user.username}
+            > **Updated values:** 
+            ${differences.map(difference => `> - ${difference.key}: \`${difference.old || 'none'}\` -> \`${difference.new || 'none'}\``).join('\n')}
+            `)
+    }
+
+    private async onServerMemberLeave(event: ClientEvent, data: any) {
+        const enabled = await this.checkIfEnabled(data.id, 'serverMemberLeave')
+        if (!enabled) return
+
+        const logChannel = await this.getLogChannel(data.id)        
+        if (!logChannel) return
+
+        const user = await this.client.bot.users.fetch(data.user)
+        if (!user) return
+
+        await logChannel.sendMessage(stripIndents`
+        > #### User left
+        > **User:** ${user.username}
         `)
     }
 }
