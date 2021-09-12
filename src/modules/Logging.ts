@@ -100,16 +100,11 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
 
     private async onReady(event: ClientEvent) {
         await Promise.all(Object.values(this.client.bot.servers).map(async server => {
-            /*
-            TODO:
-            const members = await server.fetchMembers()
+            /*const members = await server.fetchMembers()
 
             members.forEach(member => {
-                memberCache.set(member._id, {
-
-                })
-            })
-            */
+                memberCache.set(`${server._id}_${member._id}`, member) //temporary
+            })*/
 
             server.channels.forEach(channel => {
                 channelCache.set(channel!._id, {
@@ -220,7 +215,7 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         if (!logChannel) return
         
         const differences = Object.entries(channel.data).map(i => {
-            if (i[0] === 'icon') return { key: i[0], old: `[Link](https://autumn.revolt.chat/icons/${oldChannel.icon._id})`, new: `[Link](https://autumn.revolt.chat/icons/${(i[1] as any).icon._id})` }
+            if (i[0] === 'icon') return { key: i[0], old: `[Link](https://autumn.revolt.chat/icons/${oldChannel.icon._id})`, new: `[Link](https://autumn.revolt.chat/icons/${(i[1] as any)._id})` }
             return { key: i[0], old: oldChannel[i[0] as string], new: i[1] }
         })
 
@@ -230,7 +225,7 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         await logChannel.sendMessage(stripIndents`
         > #### Channel updated
         > **Updated values:**
-        ${differences.map(difference => `> - ${difference.key}: \`${difference.old || 'none'}\` -> \`${difference.new || 'none'}\``).join('\n')}
+        ${differences.map(difference => `> - ${difference.key}: ${difference.old || 'none'} -> ${difference.new || 'none'}`).join('\n')}
         `)
 
         differences.forEach(difference => {
@@ -238,6 +233,8 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
             newObj[difference.key] = difference.new
             channelCache.set(channel.id, newObj)
         })
+
+        
     }
 
     private async onChannelDelete(event: ClientEvent, channelID: string) {
@@ -285,6 +282,8 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         const user = await this.client.bot.users.fetch(data.id.user)
         if (!user) return
 
+        const oldUser = this.client.bot.members.get(data.id.user) || undefined
+
         if (data['clear']) {
             await logChannel.sendMessage(stripIndents`
             > #### User updated
@@ -292,18 +291,20 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
             > **Updated values:** 
             > - ${data.clear} removed
             `)
+
+            return
         }
 
         const differences = Object.entries(data.data).map(i => {
-            if (i[0] === 'avatar') return { key: i[0], old: null, new: `[Link](https://autumn.revolt.chat/avatars/${(i[1] as any).avatar._id}/${(i[1] as any).avatar.filename})` }
-            return { key: i[0], old: null, new: i[1] }
+            if (i[0] === 'avatar') return { key: i[0], old: oldUser! ? `[Link](https://autumn.revolt.chat/avatars/${oldUser![i[0] as string]._id}/${oldUser![i[0] as string].filename})` : null, new: `[Link](https://autumn.revolt.chat/avatars/${(i[1] as any)._id}/${(i[1] as any).filename})` }
+            return { key: i[0], old: oldUser![i[0] as string] || null, new: i[1] }
         })
 
         await logChannel.sendMessage(stripIndents`
             > #### User updated
             > **User:** ${user.username}
             > **Updated values:** 
-            ${differences.map(difference => `> - ${difference.key}: \`${difference.old || 'none'}\` -> \`${difference.new || 'none'}\``).join('\n')}
+            ${differences.map(difference => `> - ${difference.key}: ${difference.old || 'none'} -> ${difference.new || 'none'}`).join('\n')}
             `)
     }
 
