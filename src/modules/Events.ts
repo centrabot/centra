@@ -55,6 +55,7 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
         await (servers as Collection).insertOne({
             id: event.id,
             tags: [],
+            autoreplies: [],
             punishments: [],
             modRoles: [],
             adminRoles: [],
