@@ -8,6 +8,7 @@ import parse from 'yargs-parser'
 import { servers } from '../../util/database'
 import { sendError } from '../../util/messageUtils'
 import { getUser } from '../../util/fetchUtils'
+import { isMod } from '../../util/permissionUtils'
 
 const validOptions = ['<name>', 'list', 'info', 'create', 'edit', 'delete']
 
@@ -32,6 +33,8 @@ export default class TagCommand extends GeneralCommand {
     }
 
     async run(ctx: CommandContext) {
+        const userIsMod = await isMod(ctx.server!, ctx.author._id)
+
         const params = parse(ctx.args)
         const mention = (params.mention || params.m || null)
 
@@ -46,12 +49,16 @@ export default class TagCommand extends GeneralCommand {
         const tags = server!.tags
 
         if (option === 'list') {
+
+
             await ctx.reply(!tags.length ? `No tags have been created\nUse \`${ctx.prefix}tag create <name> <content>\` to create one` : `${tags.length} tag${tags.length > 1 ? 's' : ''}: ${tags.map(tag => tag.name).join(', ')}`)
             
             return
         }
 
         if (option === 'info') {
+            if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+
             ctx.args.shift()
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
@@ -70,6 +77,8 @@ export default class TagCommand extends GeneralCommand {
         }
 
         if (option === 'create') {
+            if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+
             ctx.args.shift()
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
@@ -99,6 +108,8 @@ export default class TagCommand extends GeneralCommand {
         }
 
         if (option === 'edit') {
+            if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+
             ctx.args.shift()
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
@@ -127,6 +138,8 @@ export default class TagCommand extends GeneralCommand {
         }
 
         if (option === 'delete') {
+            if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+
             ctx.args.shift()
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
@@ -148,7 +161,7 @@ export default class TagCommand extends GeneralCommand {
             return
         }
 
-        if (!server!.membersCanUseTags) return sendError(ctx, 'Only moderators can use tags')
+        if (!server!.membersCanUseTags && !userIsMod) return sendError(ctx, 'Only moderators can use tags')
         
         const tag = tags.find(i => i.name.toLowerCase() === option)
         if (!tag) return sendError(ctx, 'No tag with that name exists')

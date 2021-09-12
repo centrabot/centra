@@ -8,6 +8,7 @@ import parse from 'yargs-parser'
 import { servers } from '../../util/database'
 import { getUser } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
+import { isMod } from '../../util/permissionUtils'
 
 export default class WarnCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
@@ -24,6 +25,9 @@ export default class WarnCommand extends GeneralCommand {
     }
 
     async run(ctx: CommandContext) {
+        const userIsMod = await isMod(ctx.server!, ctx.author._id)
+        if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+        
         const params = parse(ctx.args)
         const reason = (params.reason || params.r || null)
 

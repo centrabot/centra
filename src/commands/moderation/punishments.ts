@@ -8,6 +8,7 @@ import parse from 'yargs-parser'
 import { servers } from '../../util/database'
 import { getUser } from '../../util/fetchUtils'
 import { sendError, paginate } from '../../util/messageUtils'
+import { isMod } from '../../util/permissionUtils'
 
 const validSorting = ['newest', 'oldest']
 
@@ -33,6 +34,9 @@ export default class PunishmentsCommand extends GeneralCommand {
     }
 
     async run(ctx: CommandContext) {
+        const userIsMod = await isMod(ctx.server!, ctx.author._id)
+        if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+        
         const params = parse(ctx.args)
         const page = (params.page || params.p || 1)
         const sorting = (params.sort || params.s || 'newest')
