@@ -5,13 +5,13 @@ A powerful moderation & utility bot for Revolt servers
 Centra is in development and an invite link is not yet public
 
 ## Features
-- Straight-forward moderation tools (kicking, banning with optional duration**, warning with pardoning, muting*, message purging with filters*, slowmode* and lockdown*)
+- Straight-forward moderation tools (kicking, banning with optional duration**, warning with pardoning, muting*, message purging with filters*, slowmode*, server/channel lockdown* and reason updating)
 - Useful server utilities (serverinfo, userinfo, avatar, invites)
 - Fully featured, persistent punishment history with reason* and duration* updating
 - Configurable logging of all server events***
 - Tags system with mention option and moderator-only functionality
 - Auto-response system based on specified keyword matches*
-- Private per-server user notes shared with all moderators to help keep notes on particular users*
+- Private per-server user notes shared with all moderators to help keep notes on particular users
 - Configurable auto moderation (word filtering, message/emoji spam filtering, copypasta/assorted spam filtering, invite filtering) with optional automatic warning issuing*
 - Fully configurable trigger/threshold system to issue punishments based on certain thresholds, ie. `mute at 3 warnings`, `ban at 3 mutes`*
 - Highly customizable server configuration to allow granular control of all features****

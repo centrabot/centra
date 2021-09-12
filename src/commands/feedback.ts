@@ -6,7 +6,7 @@ import { sendError } from '../util/messageUtils'
 export default class FeedbackCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
-            name: 'report',
+            name: 'feedback',
             description: `Send feedback`,
             category: 'General',
             metadata: {
