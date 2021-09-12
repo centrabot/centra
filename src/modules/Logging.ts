@@ -11,10 +11,18 @@ const messageCache = new Map
 const channelCache = new Map
 const roleCache = new Map
 
-const channelTypes = {
+export const channelTypes = {
     TextChannel: 'Text',
     VoiceChannel: 'Voice'
 }
+
+export const serverEvents = [
+    'messageUpdate',
+    'messageDelete',
+    'channelCreate',
+    'channelUpdate',
+    'channelDelete'
+]
 
 export default class LoggingModule<t extends VoltareClient> extends VoltareModule<t> {
     constructor(client: t) {
@@ -30,17 +38,19 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         this.registerEvent('ready', this.onReady.bind(this))
         this.registerEvent('message', this.onMessage.bind(this))
 
-        // register broken events
+        // register events with broken direct binding
         this.registerEvent('packet', (event: ClientEvent, data: ClientboundNotification) => {
+            if (data.type === 'MessageDelete') this.onMessageDelete(event, data as any)
+
             if (data.type === 'ChannelCreate') this.onChannelCreate(event, data as any)
             if (data.type === 'ChannelUpdate') this.onChannelUpdate(event, data as any)
         })
 
         this.registerEvent('messageUpdate', this.onMessageUpdate.bind(this))
-        this.registerEvent('messageDelete', this.onMessageDelete.bind(this))
+        //this.registerEvent('messageDelete', this.onMessageDelete.bind(this)) - direct binding broken
 
-        //this.registerEvent('channelCreate', this.onChannelCreate.bind(this)) - broken
-        //this.registerEvent('channelUpdate', this.onChannelUpdate.bind(this)) - broken
+        //this.registerEvent('channelCreate', this.onChannelCreate.bind(this)) - direct binding broken
+        //this.registerEvent('channelUpdate', this.onChannelUpdate.bind(this)) - direct binding broken
         this.registerEvent('channelDelete', this.onChannelDelete.bind(this))
 
         //serverUpdate - incomplete
@@ -55,6 +65,16 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
 
     unload() {
         this.unregisterAllEvents()
+    }
+
+    async checkIfEnabled(serverID: string, eventName: string): Promise<boolean> {
+        const server = await (servers as Collection).findOne({ id: serverID })
+        if (!server) return false
+
+        if (!server.loggingEnabled) return false
+        if (!server.loggingEventsEnabled.find(i => i.toLowerCase() === eventName.toLowerCase())) return false
+
+        return true
     }
 
     async getLogChannel(serverID: string): Promise<Channel | undefined> {
@@ -93,6 +113,9 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
     }
 
     private async onMessageUpdate(event: ClientEvent, message: Message) {
+        const enabled = await this.checkIfEnabled(message.channel!.server_id!, 'messageUpdate')
+        if (!enabled) return
+
         const logChannel = await this.getLogChannel(message.channel!.server_id!)        
         if (!logChannel) return
 
@@ -114,33 +137,39 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         messageCache.get(message._id).content = message.content
     }
 
-    private async onMessageDelete(event: ClientEvent, messageID: string) {
-        const message = messageCache.get(messageID)
-        if (!message) return
+    private async onMessageDelete(event: ClientEvent, message: any) {
+        const deleted = messageCache.get(message.id)
+        if (!deleted) return
 
-        const logChannel = await this.getLogChannel(message.server)        
+        const enabled = await this.checkIfEnabled(deleted.server, 'messageDelete')
+        if (!enabled) return
+
+        const logChannel = await this.getLogChannel(deleted.server)        
         if (!logChannel) return
 
-        const author = await this.client.bot.users.fetch(message.author)
+        const author = await this.client.bot.users.fetch(deleted.author)
 
         let i = 0;
 
         await logChannel.sendMessage(stripIndents`
         > #### Message deleted
         > **Author:** ${author.username || '*Unknown*'}
-        > **Channel:** <#${message.channel}>
+        > **Channel:** <#${deleted.channel}>
         > **Content:**
-        > \`\`\`\n> ${(message.content as string).split('\n').join('\n> ')}\n>\`\`\`
-        > **Attachments:** ${message.attachments.length ? message.attachments.map(attachment => {
+        > \`\`\`\n> ${(deleted.content as string).split('\n').join('\n> ')}\n>\`\`\`
+        > **Attachments:** ${(deleted.attachments || []).length ? deleted.attachments.map(attachment => {
             i++
             return `[Attachment #${i}](https://autumn.revolt.chat/attachments/${attachment._id}/${attachment.filename})`
         }).join(', ') : 'No attachments'}
         `)
 
-        messageCache.delete(messageID)
+        messageCache.delete(message.id)
     }
 
     private async onChannelCreate(event: ClientEvent, channel: Partial<Channel>) {
+        const enabled = await this.checkIfEnabled(channel!.server! as any as string, 'channelCreate')
+        if (!enabled) return
+
         const logChannel = await this.getLogChannel(channel!.server! as any as string)        
         if (!logChannel) return
 
@@ -163,6 +192,9 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         const oldChannel = channelCache.get(channel.id)
         if (!oldChannel) return 
 
+        const enabled = await this.checkIfEnabled(oldChannel.server, 'channelUpdate')
+        if (!enabled) return
+
         const logChannel = await this.getLogChannel(oldChannel.server)        
         if (!logChannel) return
         
@@ -170,7 +202,6 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
             return { key: i[0], old: oldChannel[i[1] as string], new: i[1] }
         })
 
-        // stops spamming from mass permission updates
         if (differences.some(difference => difference.key === 'default_permissions')) return
         if (differences.some(difference => difference.key === 'role_permissions')) return
 
@@ -190,6 +221,9 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
     private async onChannelDelete(event: ClientEvent, channelID: string) {
         const channel = this.client.bot.channels.get(channelID)
         if (!channel) return
+
+        const enabled = await this.checkIfEnabled(channel!.server_id!, 'channelDelete')
+        if (!enabled) return
 
         const logChannel = await this.getLogChannel(channel!.server_id!)        
         if (!logChannel) return
