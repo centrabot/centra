@@ -18,9 +18,9 @@
     "mongodb": "^4.1.1",
     "nanoid": "^3.1.25",
     "revolt-api": "^0.5.2-alpha.2",
-    "revolt.js": "^5.0.1-alpha.7-patch.0",
+    "revolt.js": "^5.1.0-alpha.0-patch.0",
     "ulid": "^2.3.0",
-    "voltare": "0.3.2",
+    "voltare": "^0.3.4",
     "yargs-parser": "^20.2.9"
   }
 }
