@@ -7,7 +7,7 @@ Centra is in development and an invite link is not yet public
 ## Features
 - Straight-forward moderation tools (kicking, banning with optional duration**, warning with pardoning, muting*, message purging with filters*, slowmode*, server/channel lockdown* and reason updating)
 - Useful server utilities (server/user/role info, avatars, invites, reminders)
-- Fully featured, persistent punishment history with reason* and duration* updating
+- Fully featured, persistent punishment history with reason and duration* updating
 - Configurable logging of all server events***
 - Tags system with mention option and moderator-only functionality
 - Auto-response system based on specified keyword matches*
