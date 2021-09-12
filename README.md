@@ -35,8 +35,9 @@ Centra is in development and an invite link is not yet public
     - Spam filtering (message, emoji)
     - Copy-pasta filtering
     - Anti-hoisting
+    - Name normalisation (ie. `𝓣𝓱𝓪𝓽𝓣𝓸𝓷𝔂𝓫𝓸` to `ThatTonybo`)
     - Invite blocking
-    - Shortlink blocking (such as bit.ly)
+    - Shortlink blocking (such as bit.ly, known scam links)
 - Fully configurable trigger/threshold system to issue punishments based on certain thresholds*
     - Set thresholds such as: mute at 3 warnings, kick at 3 mutes
     - Hooks with auto-mod to provide full control over auto moderation

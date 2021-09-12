@@ -64,7 +64,14 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
             loggingEnabled: false,
             loggingEventsEnabled: [],
             autoMod: {
-                
+                wordFilter: { enabled: false, words: [] },
+                messageSpamFilter: { enabled: false },
+                emojiSpamFilter: { enabled: false },
+                copypastaFilter: { enabled: false },
+                antiHoisting: { enabled: false },
+                nameNormalisation: { enabled: false },
+                inviteBlocking: { enabled: false },
+                shortlinkBlocking: { enabled: false }
             },
             useMentionPrefix: true,
             membersCanUseTags: false,
