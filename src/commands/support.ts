@@ -6,7 +6,7 @@ export default class SupportCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'support',
-            description: `Join the support server`,
+            description: 'Join the support server',
             category: 'General',
             metadata: {
                 examples: ['{p}support']

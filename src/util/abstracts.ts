@@ -24,7 +24,7 @@ export abstract class GeneralCommand extends VoltareCommand {
         `)
 
         return ctx.reply(stripIndents`
-        $\\color{#CE3C3C}\\textsf{An error occurred running this command}$
+        ### $\\color{#CE3C3C}\\textsf{An error occurred running this command}$
         If the error continues to occur, please report it using \`${ctx.prefix}report ${id}\`
         &nbsp;
         Error ID: \`${id}\`

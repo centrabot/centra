@@ -7,7 +7,7 @@ export default class PingCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'ping',
-            description: 'Checks the bot\'s ping and latency',
+            description: `Checks ${process.env.BOT_NAME}\'s ping and latency`,
             category: 'General',
             metadata: {
                 examples: ['{p}ping']
