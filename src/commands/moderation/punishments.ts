@@ -50,10 +50,9 @@ export default class PunishmentsCommand extends GeneralCommand {
             let history = punishments.filter(i => i.userID === ctx.author._id)
             if (!history.length) return sendError(ctx, 'You do not have any punishments in this server')
 
-            if (sorting === 'newest') history = history.sort((a, b) => b.date - a.date)
-            if (sorting === 'oldest') history = history.sort((a, b) => a.date - b.date)
-
             const pages = paginate(history, 10)
+            if (sorting === 'newest') pages[page - 1].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+            if (sorting === 'oldest') pages[page - 1].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
             if (page < pages.length) return sendError(ctx, `Invalid page number. Valid range is: 1 - ${pages.length}`)
 
