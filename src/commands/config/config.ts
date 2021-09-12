@@ -6,6 +6,7 @@ import { stripIndents } from 'common-tags'
 import { servers } from '../../util/database'
 import { getChannel } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
+import { isAdmin } from '../../util/permissionUtils'
 
 const validOptions = ['view', 'set', 'reset']
 const validResetOptions = ['<key>', 'all']
@@ -45,7 +46,10 @@ export default class ConfigCommand extends GeneralCommand {
         this.filePath = __filename
     }
 
-    async run(ctx: CommandContext) {            try {
+    async run(ctx: CommandContext) {
+        const userIsAdmin = await isAdmin(ctx.server!, ctx.author._id)
+        if (!userIsAdmin) return sendError(ctx, 'Only admins can use this command')
+
         if (!ctx.args.length) return stripIndents`
         No option provided. Option must be one of the following: ${validOptions.join(', ')}
         See \`${ctx.prefix}help config\` for more information
@@ -190,7 +194,5 @@ export default class ConfigCommand extends GeneralCommand {
 
             return
         }
-
-    } catch(err) { console.error(err) }
     }
 }

@@ -6,6 +6,7 @@ import { stripIndents } from 'common-tags'
 
 import { servers } from '../../util/database'
 import { sendError } from '../../util/messageUtils'
+import { isAdmin } from '../../util/permissionUtils'
 
 const validOptions = ['create', 'set', 'update']
 
@@ -30,6 +31,9 @@ export default class MuteroleCommand extends GeneralCommand {
     }
 
     async run(ctx: CommandContext) {
+        const userIsAdmin = await isAdmin(ctx.server!, ctx.author._id)
+        if (!userIsAdmin) return sendError(ctx, 'Only admins can use this command')
+        
         const server = await (servers as Collection).findOne({ id: ctx.server!._id })
 
         if (!ctx.args.length) {
