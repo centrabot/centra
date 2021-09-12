@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 import { nanoid } from 'nanoid'
@@ -7,7 +8,7 @@ import parse from 'yargs-parser'
 import { servers } from '../../util/database'
 import { sendError } from '../../util/messageUtils'
 
-export default class PardonCommand extends VoltareCommand {
+export default class PardonCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'pardon',

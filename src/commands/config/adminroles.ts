@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 
@@ -7,7 +8,7 @@ import { sendError } from '../../util/messageUtils'
 
 const validOptions = ['list', 'add', 'remove']
 
-export default class AdminrolesCommand extends VoltareCommand {
+export default class AdminrolesCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'adminroles',

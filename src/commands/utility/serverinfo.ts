@@ -1,10 +1,11 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Channel } from 'revolt.js/dist/maps/Channels'
 import { stripIndents } from 'common-tags'
 import { format } from 'date-fns'
 import { decodeTime } from 'ulid'
 
-export default class ServerinfoCommand extends VoltareCommand {
+export default class ServerinfoCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'serverinfo',

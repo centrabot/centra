@@ -1,10 +1,11 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../util/abstracts'
 import { stripIndents } from 'common-tags'
 import { LIBRARY_VERSION } from 'revolt.js'
 
 import { dependencies } from '../../package.json' 
 
-export default class StatisticsCommand extends VoltareCommand {
+export default class StatisticsCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'statistics',

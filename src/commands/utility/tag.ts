@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 import { format } from 'date-fns'
@@ -10,7 +11,7 @@ import { getUser } from '../../util/fetchUtils'
 
 const validOptions = ['<name>', 'list', 'info', 'create', 'edit', 'delete']
 
-export default class TagCommand extends VoltareCommand {
+export default class TagCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'tag',

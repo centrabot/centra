@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 import { nanoid } from 'nanoid'
@@ -8,7 +9,7 @@ import { servers } from '../../util/database'
 import { getUser } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
 
-export default class KickCommand extends VoltareCommand {
+export default class KickCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'kick',

@@ -1,15 +1,15 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { User } from 'revolt.js/dist/maps/Users'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
-import { nanoid } from 'nanoid'
 import parse from 'yargs-parser'
 
 import { servers } from '../../util/database'
 import { getUser } from '../../util/fetchUtils'
 import { sendError, paginate } from '../../util/messageUtils'
 
-export default class NotesCommand extends VoltareCommand {
+export default class NotesCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'notes',
@@ -63,6 +63,10 @@ export default class NotesCommand extends VoltareCommand {
                 createdBy: ctx.author._id
             })
 
+            await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
+                notes: server!.notes
+            } })
+
             await ctx.reply(stripIndents`
             Note added to ${user.username}
             `)
@@ -104,19 +108,5 @@ export default class NotesCommand extends VoltareCommand {
         `)
 
         return
-    }
-
-    onError(err: any, ctx: CommandContext) {
-        const id = nanoid(13)
-        
-        console.error(err)
-
-        return ctx.reply(stripIndents`
-        An error occurred running this command
-        If the error continues to occur, please report it using \`${ctx.prefix}report --id ${id}\`
-        &nbsp;
-        Error ID: \`${id}\`
-        Error: \`${err.toString()}\`
-        `)
     }
 }

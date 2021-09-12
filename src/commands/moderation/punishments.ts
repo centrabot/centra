@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 import { format } from 'date-fns'
@@ -10,7 +11,7 @@ import { sendError, paginate } from '../../util/messageUtils'
 
 const validSorting = ['newest', 'oldest']
 
-export default class PunishmentsCommand extends VoltareCommand {
+export default class PunishmentsCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'punishments',

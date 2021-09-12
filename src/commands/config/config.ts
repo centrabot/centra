@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 
@@ -25,7 +26,7 @@ const configDetails = {
     modLogsChannel: { key: 'modLogsChannel', type: 'channel', description: 'The channel where mod logs (such as kicks, bans, mutes, warnings) are sent/logged to' }
 }
 
-export default class ConfigCommand extends VoltareCommand {
+export default class ConfigCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'config',

@@ -1,8 +1,9 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../util/abstracts'
 import { stripIndents } from 'common-tags'
 import { decodeTime } from 'ulid'
 
-export default class PingCommand extends VoltareCommand {
+export default class PingCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'ping',

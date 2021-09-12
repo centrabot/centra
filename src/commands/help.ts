@@ -1,9 +1,10 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../util/abstracts'
 import { stripIndents } from 'common-tags'
 
 import { sendError } from '../util/messageUtils'
 
-export default class HelpCommand extends VoltareCommand {
+export default class HelpCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'help',

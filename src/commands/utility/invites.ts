@@ -1,10 +1,11 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { stripIndents } from 'common-tags'
 import parse from 'yargs-parser'
 
 import { sendError, paginate } from '../../util/messageUtils'
 
-export default class InvitesCommand extends VoltareCommand {
+export default class InvitesCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'invites',

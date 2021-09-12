@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { ChannelPermission } from 'revolt.js'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
@@ -8,7 +9,7 @@ import { sendError } from '../../util/messageUtils'
 
 const validOptions = ['create', 'set', 'update']
 
-export default class MuteroleCommand extends VoltareCommand {
+export default class MuteroleCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'muterole',

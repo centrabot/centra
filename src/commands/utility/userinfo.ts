@@ -1,4 +1,5 @@
-import { VoltareClient, VoltareCommand, CommandContext } from 'voltare'
+import { VoltareClient, CommandContext } from 'voltare'
+import { GeneralCommand } from '../../util/abstracts'
 import { User } from 'revolt.js/dist/maps/Users'
 import { stripIndents } from 'common-tags'
 import { format } from 'date-fns'
@@ -7,7 +8,7 @@ import { decodeTime } from 'ulid'
 import { getUser } from '../../util/fetchUtils'
 import { sendError } from '../../util/messageUtils'
 
-export default class UserinfoCommand extends VoltareCommand {
+export default class UserinfoCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
         super(client, {
             name: 'userinfo',
