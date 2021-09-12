@@ -8,15 +8,9 @@ import { servers } from '../../util/database'
 import { sendError } from '../../util/messageUtils'
 import { isAdmin } from '../../util/permissionUtils'
 
-const validOptions = ['info', 'enable', 'disable']
+import { serverEvents } from '../../modules/Logging'
 
-const serverEvents = [
-    'messageUpdate',
-    'messageDelete',
-    'channelCreate',
-    'channelUpdate',
-    'channelDelete'
-]
+const validOptions = ['info', 'enable', 'disable']
 
 export default class LoggingCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
