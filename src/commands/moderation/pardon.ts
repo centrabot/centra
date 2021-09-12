@@ -32,6 +32,7 @@ export default class PardonCommand extends GeneralCommand {
         const punishments = server!.punishments
 
         const warning = punishments.find(i => i.id === params._[0])
+        if (warning.type !== 'warning') return sendError(ctx, 'The provided ID does not belong to a warning')
         if (!warning) return sendError(ctx, 'No warning with that ID exists')
 
         const user = await ctx.client.bot.users.fetch(warning.userID)
