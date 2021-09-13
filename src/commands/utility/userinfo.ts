@@ -41,7 +41,7 @@ export default class UserinfoCommand extends GeneralCommand {
             return data
         })
         
-        const userRoles = serverRoles.filter(role => member.roles!.includes(role._id))
+        const userRoles = serverRoles.filter(role => (member.roles! || []).includes(role._id))
         const mutualServers = await Promise.all(mutuals.servers.map(async id => {
             const server = await ctx.client.bot.servers.fetch(id)
 
