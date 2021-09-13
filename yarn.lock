@@ -268,17 +268,17 @@ punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
+revolt-api@0.5.2-alpha.2:
+  version "0.5.2-alpha.2"
+  resolved "https://registry.yarnpkg.com/revolt-api/-/revolt-api-0.5.2-alpha.2.tgz#a083b918c239d0b8967f8a2c7f10d6466d30d3d5"
+  integrity sha512-Sm6YL7vjyt5fpq1kQCp1OtKdjmaH7lgeWON4YDOycb5Bc1hKc9vgRHS4FhGlie2ilrk9Sox3CdY0tCQ0ENcDSw==
+
 revolt-api@0.5.3-alpha.0:
   version "0.5.3-alpha.0"
   resolved "https://registry.yarnpkg.com/revolt-api/-/revolt-api-0.5.3-alpha.0.tgz#4e093e09bf7dc4f4fdec50c35b6d4cff7e7cdbfb"
   integrity sha512-EB911QIBMIetM+wBozHYawoeO3GDei4UsxXD1YV13ldZ6l7/BWe0X7kax/zCVZFcC0cE5mxr3eizN+iYNV/boA==
 
-revolt-api@^0.5.2-alpha.2:
-  version "0.5.2-alpha.2"
-  resolved "https://registry.yarnpkg.com/revolt-api/-/revolt-api-0.5.2-alpha.2.tgz#a083b918c239d0b8967f8a2c7f10d6466d30d3d5"
-  integrity sha512-Sm6YL7vjyt5fpq1kQCp1OtKdjmaH7lgeWON4YDOycb5Bc1hKc9vgRHS4FhGlie2ilrk9Sox3CdY0tCQ0ENcDSw==
-
-revolt.js@^5.1.0-alpha.0-patch.0:
+revolt.js@5.1.0-alpha.0-patch.0, revolt.js@^5.1.0-alpha.0-patch.0:
   version "5.1.0-alpha.0-patch.0"
   resolved "https://registry.yarnpkg.com/revolt.js/-/revolt.js-5.1.0-alpha.0-patch.0.tgz#3d62f32d657ee1f44381018251a6682c81cf21d8"
   integrity sha512-om61mNeVWiGc6+XFPpK2YM6i6QSOT3f5prhVyM78BcZZ5U2L39SWBN3S7ycAsr8g4Q9pPLv50qYwnsMjxe4P/A==

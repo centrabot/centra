@@ -205,7 +205,7 @@ export default class AutomodCommand extends GeneralCommand {
                 }
 
                 if (func === 'remove') {
-                    const words = (params.words || []).split(',')
+                    const words = (params.words || []).split(',').map(tag => tag.trim()).filter(i => i !== '')
                     if (!words.length) return sendError(ctx, 'No words provided to remove from the word filter')
 
                     let stop
