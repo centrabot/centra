@@ -49,7 +49,7 @@ export default class TagCommand extends GeneralCommand {
         const tags = server!.tags
 
         if (option === 'list') {
-
+            if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
 
             await ctx.reply(!tags.length ? `No tags have been created\nUse \`${ctx.prefix}tag create <name> <content>\` to create one` : `${tags.length} tag${tags.length > 1 ? 's' : ''}: ${tags.map(tag => tag.name).join(', ')}`)
             
@@ -57,7 +57,7 @@ export default class TagCommand extends GeneralCommand {
         }
 
         if (option === 'info') {
-            if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
+            if (!server!.membersCanUseTags && !userIsMod) return sendError(ctx, 'Only moderators can use tags')
 
             ctx.args.shift()
             const name = (ctx.args[0] || '').toLowerCase()

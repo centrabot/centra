@@ -20,7 +20,7 @@ export default class AutoreplyCommand extends GeneralCommand {
             category: 'Utility',
             aliases: ['autoresponse', 'ar'],
             metadata: {
-                examples: ['{p}autoreply list', '{p}autoreply info <name>', '{p}autoreply create <name> --content <content> --keywords [1,2,...]', '{p}autoreply edit <name> --content [content] --keywords [1,2,...]', '{p}autoreply delete <name>'],
+                examples: ['{p}autoreply list', '{p}autoreply info <name>', '{p}autoreply create <name> <content> --keywords "keyword 1, keyword 2, ..."', '{p}autoreply edit <name> --content [content] --addkeyword <keyword> --removekeyword <keyword>', '{p}autoreply delete <name>'],
                 extendedDescription: stripIndents`
                     Auto responses are snippets of text or content, just like tags, however instead of being manually triggered, they are triggered by set keywords in a message.
                 `
@@ -35,7 +35,7 @@ export default class AutoreplyCommand extends GeneralCommand {
         if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
         
         const params = parse(ctx.args)
-        const mention = (params.mention || params.m || null)
+        const keywords = (params.keywords || params.k || null)
 
         if (!ctx.args.length) return stripIndents`
         No option provided. Option must be one of the following: ${validOptions.join(', ')}
@@ -48,7 +48,9 @@ export default class AutoreplyCommand extends GeneralCommand {
         const autoreplies = server!.autoreplies
 
         if (option === 'list') {
-
+            await ctx.reply(!autoreplies.length ? `No auto responses have been created\nUse \`${ctx.prefix}autoreply create <name> <content> --keywords "keyword 1, keyword 2, ..."\` to create one` : `${autoreplies.length} auto response${autoreplies.length > 1 ? 's' : ''}: ${autoreplies.map(ar => ar.name).join(', ')}`)
+            
+            return
         }
 
         if (option === 'info') {
