@@ -60,6 +60,7 @@ export default class TagCommand extends GeneralCommand {
             if (!server!.membersCanUseTags && !userIsMod) return sendError(ctx, 'Only moderators can use tags')
 
             ctx.args.shift()
+
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
             
@@ -80,11 +81,13 @@ export default class TagCommand extends GeneralCommand {
             if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
 
             ctx.args.shift()
+
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
             if (tags.some(tag => tag.name.toLowerCase() === name)) return sendError(ctx, 'A tag with that name already exists')
 
             ctx.args.shift()
+
             const content = ctx.args.join(' ')
             if (!content) return sendError(ctx, 'No tag content provided')
 
@@ -111,6 +114,7 @@ export default class TagCommand extends GeneralCommand {
             if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
 
             ctx.args.shift()
+
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
             
@@ -118,6 +122,7 @@ export default class TagCommand extends GeneralCommand {
             if (!tag) return sendError(ctx, 'No tag with that name exists')
 
             ctx.args.shift()
+
             const content = ctx.args.join(' ')
             if (!content) return sendError(ctx, 'No new tag content provided')
 
@@ -141,6 +146,7 @@ export default class TagCommand extends GeneralCommand {
             if (!userIsMod) return sendError(ctx, 'Only moderators can use this command')
 
             ctx.args.shift()
+            
             const name = (ctx.args[0] || '').toLowerCase()
             if (!name) return sendError(ctx, 'No tag name provided')
             
