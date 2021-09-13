@@ -1,6 +1,5 @@
 import { VoltareClient, CommandContext } from 'voltare'
 import { GeneralCommand } from '../../util/abstracts'
-import { ChannelPermission } from 'revolt.js'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 
