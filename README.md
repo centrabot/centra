@@ -22,33 +22,33 @@ Centra is in development and an invite link is not yet public
     - Reminders*
     - Polls*
 - Fully featured, persistent punishment history with reason and duration* updating
-- Configurable logging of all server events***
-    - Member joins, edits* and leaves
+- Configurable logging of all server events
+    - Member joins, edits and leaves
     - Channel creation, edits and deletion
     - Server edits*
     - Role creation, edits and deletion*
 - Tags system with mention option and moderator-only functionality
 - Auto-response system based on specified keyword matches*
 - Private per-server user notes shared with all moderators to help keep notes on particular users
-- Configurable auto moderation with automatic warning issuing*
+- Configurable auto moderation with automatic warning issuing
     - Word filtering
-    - Spam filtering (message, emoji)
-    - Copy-pasta filtering
-    - Anti-hoisting
-    - Name normalisation (ie. `𝓣𝓱𝓪𝓽𝓣𝓸𝓷𝔂𝓫𝓸` to `ThatTonybo`)
-    - Invite blocking
-    - Shortlink blocking (such as bit.ly, known scam links)
+    - Spam filtering (message, emoji)*
+    - Copy-pasta filtering*
+    - Anti-hoisting*
+    - Name normalisation (ie. `𝓣𝓱𝓪𝓽𝓣𝓸𝓷𝔂𝓫𝓸` to `ThatTonybo`)*
+    - Invite blocking*
+    - Shortlink blocking (such as bit.ly, known scam links)*
 - Fully configurable trigger/threshold system to issue punishments based on certain thresholds*
     - Set thresholds such as: mute at 3 warnings, kick at 3 mutes
-    - Hooks with auto-mod to provide full control over auto moderation
-- Highly customizable server configuration to allow granular control of all features****
-- Granular per-role node-based permission, allowing specific control of features for each role*
+    - Hooks with auto moderation to provide full control over auto moderation
+- Highly customizable server configuration to allow granular control of all features***
+- Granular per-role node-based permission, allowing specific control of features for each role****
 
 #### Disclaimers:
 \* = indicates feature coming soon  
 \*\* = banning is functional, temp banning coming soon  
-\*\*\* = not all server events are logged yet
-\*\*\*\* = not all configuration features are present or complete  
+\*\*\* = not all configuration features are present or complete  
+\*\*\*\* = permissions are limited to role based mod and admin categories until the web dashboard can proceed, as such a granular system would be too complicated to complete, use or maintain through commands
 
 ## Development
 Hosting a local version of Centra is currently only supported for development purposes. Local hosting will be supported once the bot is considered released and stable.
