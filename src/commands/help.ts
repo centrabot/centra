@@ -23,7 +23,7 @@ export default class HelpCommand extends GeneralCommand {
         if (!ctx.args.length) {
             const categories: any[] = []
 
-            ctx.client.commands.commands.filter(command => command.category !== 'developer').map(command => {
+            ctx.client.commands.commands.filter(command => command.category !== 'Developer').map(command => {
                 if (!categories.find(category => category.name === command.category)) categories.push({
                     name: command.category,
                     commands: []

@@ -79,10 +79,12 @@ export default class PardonCommand extends GeneralCommand {
             > \`${id}\` - $\\color{#1D6CBF}\\textsf{Warning pardoned}$
             > **User:** ${user.username}
             > **Moderator:** ${ctx.author.username}
-            > **Original warning:** ${warning.reason}
+            > &nbsp;
+            > **Original warning:**
+            > ${warning.reason.split('\n').join('\n> ')}
             > &nbsp;
             > **Reason:**
-            > ${reason}
+            > ${reason.split('\n').join('\n> ')}
             `)
 
             return
