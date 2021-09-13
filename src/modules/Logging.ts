@@ -62,12 +62,13 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         this.registerEvent('channelDelete', this.onChannelDelete.bind(this))
 
         //serverUpdate - incomplete
+        this.registerEvent('serverUpdate', this.onServerUpdate.bind(this))
 
         //serverRoleUpdate - incomplete
         //serverRoleDelete - incomplete
 
         //this.registerEvent('serverMemberJoin', this.onServerMemberJoin.bind(this)) - direct binding broken
-        //serverMemberUpdate - incomplete
+        //this.registerEvent('serverMemberUpdate', this.onServerMemberUpdate.bind(this)) - direct binding broken
         //this.registerEvent('serverMemberLeave', this.onServerMemberLeave.bind(this)) - direct binding broken
     }
 
@@ -100,12 +101,6 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
 
     private async onReady(event: ClientEvent) {
         await Promise.all(Object.values(this.client.bot.servers).map(async server => {
-            /*const members = await server.fetchMembers()
-
-            members.forEach(member => {
-                memberCache.set(`${server._id}_${member._id}`, member) //temporary
-            })*/
-
             server.channels.forEach(channel => {
                 channelCache.set(channel!._id, {
                     server: channel!.server_id,
@@ -254,6 +249,10 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
         > **Description:** ${channel.description || 'No description'}
         > **Icon:** ${channel.icon ? `[Link](https://autumn.revolt.chat/icons/${channel.icon._id})` : 'No icon'}
         `)
+    }
+
+    private async onServerUpdate(event: ClientEvent, data: any) {
+
     }
 
     private async onServerMemberJoin(event: ClientEvent, data: any) {
