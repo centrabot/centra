@@ -296,7 +296,7 @@ export default class LoggingModule<t extends VoltareClient> extends VoltareModul
 
         const differences = Object.entries(data.data).map(i => {
             if (i[0] === 'avatar') return { key: i[0], old: oldUser! ? `[Link](https://autumn.revolt.chat/avatars/${oldUser![i[0] as string]._id}/${oldUser![i[0] as string].filename})` : null, new: `[Link](https://autumn.revolt.chat/avatars/${(i[1] as any)._id}/${(i[1] as any).filename})` }
-            return { key: i[0], old: oldUser![i[0] as string] || null, new: i[1] }
+            return { key: i[0], old: oldUser ? oldUser![i[0] as string] || null : null, new: i[1] }
         })
 
         await logChannel.sendMessage(stripIndents`
