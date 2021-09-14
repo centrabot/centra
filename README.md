@@ -28,14 +28,13 @@ Centra is in development and an invite link is not yet public
     - Server edits*
     - Role creation, edits and deletion*
 - Tags system with mention option and moderator-only functionality
-- Auto-response system based on specified keyword matches*
+- Auto-response system based on specified keyword matches
 - Private per-server user notes shared with all moderators to help keep notes on particular users
 - Configurable auto moderation with automatic warning issuing
     - Word filtering
     - Spam filtering (message, emoji)*
-    - Copy-pasta filtering*
     - Anti-hoisting*
-    - Name normalisation (ie. `𝓣𝓱𝓪𝓽𝓣𝓸𝓷𝔂𝓫𝓸` to `ThatTonybo`)*
+    - Name normalisation (ie. `𝓣𝓱𝓪𝓽𝓣𝓸𝓷𝔂𝓫𝓸` to `ThatTonybo`)
     - Invite blocking*
     - Shortlink blocking (such as bit.ly, known scam links)
 - Fully configurable trigger/threshold system to issue punishments based on certain thresholds*
@@ -79,6 +78,7 @@ $ node .
 
 ## Credits
 - [NinoDiscord/Nino](https://raw.githubusercontent.com/NinoDiscord/Nino) for the [shortlinks.json](https://github.com/NinoDiscord/Nino/blob/master/assets/shortlinks.json) (used with permission)
+- [IonicaBizau/regex-emoji](https://github.com/IonicaBizau/regex-emoji)'s [:emoji: regex](https://github.com/IonicaBizau/regex-emoji/blob/master/test/index.js)
 
 ## License
 (c) 2021 ThatTonybo  

@@ -10,17 +10,10 @@ import { isAdmin } from '../../util/permissionUtils'
 
 const validOptions = ['info', 'enable', 'disable', 'configure']
 const validWordFilterOptions = ['list', 'add', 'remove']
+const validMessageSpamFilter = ['timelimit', 'messagelimit']
+const validEmojiSpamFilter = ['emojilimit']
 
-const automodModules = {
-    wordFilter: { key: 'wordFilter', description: 'Deletes messages that contain configured blacklisted words', options: ['words'] },
-    messageSpamFilter: { key: 'messageSpamFilter', description: 'Keeps track of how many messages a user sends within a configured time, and deletes any messages sent within the configured time that are over a configured limit', options: ['timeLimit (in seconds)', 'messageLimit'] },
-    emojiSpamFilter: { key: 'emojiSpamFilter', description: 'Deletes messages with an emoji count higher than a configured limit', options: ['emojiLimit'] },
-    copypastaFilter: { key: 'copypastaFilter', description: 'Deletes messages that contain common copypastas or possible scams', options: [] },
-    antiHoisting: { key: 'antiHoisting', description: 'Renames users that have a character at the start of their username/nickname to hoist themselves to the top of the list', options: [] },
-    nameNormalisation: { key: 'nameNormalisation', description: 'Renames users that have unmentionable or unreadable characters in their username/nickname', options: [] },
-    inviteBlocking: { key: 'inviteBlocking', description: 'Deletes messages that contain a Revolt server invite link', options: [] },
-    shortlinkBlocking: { key: 'shortlinkBlocking', description: 'Deletes messages that contain shortlinks (such as bit.ly) or commonly known scam links', options: [] }
-}
+import automodModules from '../../modules/Automod'
 
 export default class AutomodCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {
@@ -238,7 +231,35 @@ export default class AutomodCommand extends GeneralCommand {
 
             if (module.key === 'messageSpamFilter') {}
 
-            if (module.key === 'emojiSpamFilter') {}
+            if (module.key === 'emojiSpamFilter') {
+                ctx.args.shift()
+
+                if (!ctx.args.length) return sendError(ctx, `No option provided. Option must be one of the following: ${validEmojiSpamFilter.join(', ')}`)
+
+                const func = ctx.args[0].toLowerCase()
+
+                if (!validEmojiSpamFilter.some(i =>  i.toLowerCase() === func)) return sendError(ctx, `Invalid option. Option must be one of the following: ${validEmojiSpamFilter.join(', ')}`)
+
+                if (func === 'emojilimit') {
+                    ctx.args.shift()
+
+                    const num = Number(ctx.args[0] || '')
+                    if (isNaN(num) || num <= 0) return sendError(ctx, `Invalid new limit provided. Limit mu st be a number of 1 or higher.`)
+                    if (num === Number( server!.autoMod.emojiSpamFilter.emojiLimit)) return sendError(ctx, `The emoji limit is already set to ${num}`)
+
+                    server!.autoMod.emojiSpamFilter.emojiLimit = num
+
+                    await (servers as Collection).updateOne({ id: ctx.server!._id }, { $set: {
+                        autoMod: server!.autoMod
+                    } })
+
+                    await ctx.reply(stripIndents`
+                    The emoji limit for messages has been updated to ${num}
+                    `)
+
+                    return
+                }
+            }
         }
     }
 }
