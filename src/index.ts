@@ -5,6 +5,7 @@ import path from 'path'
 import EventsModule from './modules/Events'
 import LoggingModule from './modules/Logging'
 import AutomodModule from './modules/Automod'
+import AutoreplyModule from './modules/Autoreply'
 
 import * as database from './util/database'
 
@@ -23,6 +24,7 @@ const client = new VoltareClient({
 client.loadModules(EventsModule)
 client.loadModules(LoggingModule)
 client.loadModules(AutomodModule)
+client.loadModules(AutoreplyModule)
 
 //client.logRevoltEvents()
 client.logToConsole('info')

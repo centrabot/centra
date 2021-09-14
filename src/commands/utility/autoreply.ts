@@ -19,7 +19,7 @@ export default class AutoreplyCommand extends GeneralCommand {
             category: 'Utility',
             aliases: ['autoresponse', 'ar'],
             metadata: {
-                examples: ['{p}autoreply list', '{p}autoreply info <name>', '{p}autoreply create <name> <content> --keywords "keyword 1, keyword 2, ..."', '{p}autoreply edit <name> --content [content] --addkeyword <keyword> --removekeyword <keyword>', '{p}autoreply delete <name>'],
+                examples: ['{p}autoreply list', '{p}autoreply info <name>', '{p}autoreply create <name> --content <content> --keywords "keyword 1, keyword 2, ..."', '{p}autoreply edit <name> --content [content] --addkeyword <keyword> --removekeyword <keyword>', '{p}autoreply delete <name>'],
                 extendedDescription: stripIndents`
                     Auto responses are snippets of text or content, just like tags, however instead of being manually triggered, they are triggered by set keywords in a message.
                     Use \`{p}autoreply create <name> <content> --keywords "keyword 1, keyword 2, ..."\` to create an auto response, and \`{p}autoreply delete <name>\` to delete an auto response.
@@ -86,10 +86,8 @@ export default class AutoreplyCommand extends GeneralCommand {
             if (!name) return sendError(ctx, 'No auto response name provided')
             if (autoreplies.some(tag => tag.name.toLowerCase() === name)) return sendError(ctx, 'An auto response with that name already exists')
 
-            ctx.args.shift()
-
-            const content = ctx.args.join(' ')
-            if (!content) return sendError(ctx, 'No auto response content provided')
+            const content = contentParam
+            if (!content || content === '') return sendError(ctx, 'No auto response content provided')
 
             if (!keywordsParam.length) return sendError(ctx, 'No auto response keywords provided')
 
@@ -150,7 +148,11 @@ export default class AutoreplyCommand extends GeneralCommand {
                 ar.name = newName
             }
 
-            if (contentParam) ar.content = contentParam
+            if (contentParam) {
+                changed.push({ key: 'name', old: ar.content, new: contentParam })
+
+                ar.content = contentParam
+            }
 
             if (addKeywordsParam.length > 0) {
                 const isUsed = addKeywordsParam.find(keyword => autoreplies.find(ar => ar.keywords.includes(keyword)))
@@ -166,8 +168,6 @@ export default class AutoreplyCommand extends GeneralCommand {
                 }))
 
                 changed.push({ key: 'addedKeywords', value: added })
-
-                console.log('added:', added)
             }
 
             if (removeKeywordsParam.length > 0) {
