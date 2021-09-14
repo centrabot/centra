@@ -37,7 +37,7 @@ Centra is in development and an invite link is not yet public
     - Anti-hoisting*
     - Name normalisation (ie. `𝓣𝓱𝓪𝓽𝓣𝓸𝓷𝔂𝓫𝓸` to `ThatTonybo`)*
     - Invite blocking*
-    - Shortlink blocking (such as bit.ly, known scam links)*
+    - Shortlink blocking (such as bit.ly, known scam links)
 - Fully configurable trigger/threshold system to issue punishments based on certain thresholds*
     - Set thresholds such as: mute at 3 warnings, kick at 3 mutes
     - Hooks with auto moderation to provide full control over auto moderation
@@ -76,3 +76,10 @@ $ node .
 ```
 
 (As of right now, there is no separate development mode or variable, however it is coming soon)
+
+## Credits
+- [NinoDiscord/Nino](https://raw.githubusercontent.com/NinoDiscord/Nino) for the [shortlinks.json](https://github.com/NinoDiscord/Nino/blob/master/assets/shortlinks.json) (used with permission)
+
+## License
+(c) 2021 ThatTonybo  
+Licensed under the MIT License

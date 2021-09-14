@@ -3,9 +3,12 @@ import { Message } from 'revolt.js/dist/maps/Messages'
 import { Collection } from 'mongodb'
 import { stripIndents } from 'common-tags'
 import { nanoid } from 'nanoid'
+import urlRegex from 'url-regex'
 
 import { isMod, isAdmin } from '../util/permissionUtils'
 import { servers } from '../util/database'
+
+import shortlinks from '../../assets/shortlinks.json'
 
 export default class AutomodModule<t extends VoltareClient> extends VoltareModule<t> {
     constructor(client: t) {
@@ -51,7 +54,8 @@ export default class AutomodModule<t extends VoltareClient> extends VoltareModul
 
         const status = await this.checkIfEnabled(message.channel!.server_id!)
 
-        if (status.wordFilter.enabled) this.handleWordFilter(event, message, server, punishments, status.wordFilter)
+        if (status.wordFilter.enabled) { this.handleWordFilter(event, message, server, punishments, status.wordFilter) }
+        if (status.shortlinkBlocking.enabled) { this.handleShortlinkBlocking(event, message, server, punishments) }
     }
 
     private async handleWordFilter(event: ClientEvent, message: Message, server: any, punishments: any, config: any) {
@@ -101,5 +105,61 @@ export default class AutomodModule<t extends VoltareClient> extends VoltareModul
                 event.skip('commands')
             }
         }
+    }
+
+    private async handleShortlinkBlocking(event: ClientEvent, message: Message, server: any, punishments: any) {
+        const links: string[] | null = (message.content as string).match(urlRegex());
+        if (!links || !links.length) return
+
+        await Promise.all(links.map(async link => {
+            if (shortlinks.some(i => new RegExp(i.toLowerCase()).test(link.toLowerCase()))) {
+                await message.delete()
+
+                await message.channel!.sendMessage(stripIndents`
+                <@${message.author_id}>: Your message contained a shortlink or blacklisted URL. Warning issued.
+                `)
+    
+                // Issue warning:
+                const id = nanoid(10)
+                const reason = `Message contained shortlink or blacklisted URL`
+
+                punishments.push({
+                    id,
+                    userID: message.author_id,
+                    moderatorID: process.env.BOT_USER_ID,
+                    type: 'warning',
+                    createdAt: new Date(),
+                    reason: `[AUTOMOD] ${reason}`
+                })
+        
+                await (servers as Collection).updateOne({ id: message.channel!.server_id! }, { $set: {
+                    punishments
+                } })
+
+                // Log:
+                const modLogs = (server!.modLogsChannel || server!.modlogschannel || null)
+                if (!modLogs) event.skip('commands')
+                else {
+                    const modLogsChannel = await this.client.bot.channels.fetch(modLogs)
+                    if (!modLogsChannel) event.skip('commands')
+        
+                    await modLogsChannel.sendMessage(stripIndents`
+                    > \`${id}\` - $\\color{#F39F00}\\textsf{Warning issued}$
+                    > $\\color{#F39F00}\\textsf{Auto Moderation Triggered - Shortlink Blocking}$
+                    > **User:** ${message.author!.username}
+                    > **Moderator:** ${process.env.BOT_NAME}
+                    > &nbsp;
+                    > **Reason:**
+                    > ${reason}
+                    `)
+        
+                    event.skip('commands')
+                }
+            }
+
+            return
+        }))
+
+        return
     }
 }
