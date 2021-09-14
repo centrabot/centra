@@ -2,7 +2,7 @@ import { CommandContext } from 'voltare'
 import { Client } from 'revolt.js'
 import { Message } from 'revolt.js/dist/maps/Messages'
 
-export const sendError = async (ctx: CommandContext, str: string) => {
+export const sendError = async (ctx: CommandContext | Message, str: string) => {
     await ctx.reply(str)
     return
 }
