@@ -68,7 +68,7 @@ export default class EventsModule<t extends VoltareClient> extends VoltareModule
                 messageSpamFilter: { enabled: false, timeLimit: 5, messageLimit: 5 },
                 emojiSpamFilter: { enabled: false, emojiLimit: 10 },
                 antiHoisting: { enabled: false },
-                nameNormalisation: { enabled: false },
+                nameNormalization: { enabled: false },
                 inviteBlocking: { enabled: false },
                 shortlinkBlocking: { enabled: false }
             },

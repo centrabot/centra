@@ -13,7 +13,7 @@ const validWordFilterOptions = ['list', 'add', 'remove']
 const validMessageSpamFilter = ['timelimit', 'messagelimit']
 const validEmojiSpamFilter = ['emojilimit']
 
-import automodModules from '../../modules/Automod'
+import { automodModules } from '../../modules/Automod'
 
 export default class AutomodCommand extends GeneralCommand {
     constructor(client: VoltareClient<any>) {

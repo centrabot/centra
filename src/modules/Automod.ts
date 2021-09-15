@@ -18,7 +18,7 @@ export const automodModules = {
     messageSpamFilter: { key: 'messageSpamFilter', description: 'Keeps track of how many messages a user sends within a configured time, and deletes any messages sent within the configured time that are over a configured limit', options: ['timeLimit (in seconds)', 'messageLimit'] },
     emojiSpamFilter: { key: 'emojiSpamFilter', description: 'Deletes messages with an emoji count higher than a configured limit', options: ['emojiLimit'] },
     antiHoisting: { key: 'antiHoisting', description: 'Renames users that have a character at the start of their username/nickname to hoist themselves to the top of the list', options: [] },
-    nameNormalisation: { key: 'nameNormalisation', description: 'Renames users that have unmentionable or unreadable characters in their username/nickname', options: [] },
+    nameNormalization: { key: 'nameNormalization', description: 'Renames users that have unmentionable or unreadable characters in their username/nickname', options: [] },
     inviteBlocking: { key: 'inviteBlocking', description: 'Deletes messages that contain a Revolt server invite link', options: [] },
     shortlinkBlocking: { key: 'shortlinkBlocking', description: 'Deletes messages that contain shortlinks (such as bit.ly) or commonly known scam links', options: [] }
 }
