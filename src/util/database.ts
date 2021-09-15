@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb'
 import dotenv from 'dotenv'
-let db, servers
+let db, servers, reminders
 
 dotenv.config()
 
@@ -11,6 +11,7 @@ export const connect = async () => {
     db = mongo.db(process.env.MONGO_DB!)
 
     servers = db.collection('servers')
+    reminders = db.collection('reminders')
 }
 
-export { db, servers }
+export { db, servers, reminders }
