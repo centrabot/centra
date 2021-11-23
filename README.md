@@ -71,7 +71,7 @@ Before running the bot, the source code must be compiled to JavaScript. This can
 
 Then, you can start the bot with node:
 ```bash
-$ node .
+$ node dist
 ```
 
 (As of right now, there is no separate development mode or variable, however it is coming soon)

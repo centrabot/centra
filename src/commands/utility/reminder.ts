@@ -102,7 +102,7 @@ export default class ReminderCommand extends GeneralCommand {
             })
 
             await ctx.reply(stripIndents`
-            Reminder set in ${ms(duration, { long: true })}:
+            Reminder set for ${ms(duration, { long: true })} away:
             ${content}
             `)
 
